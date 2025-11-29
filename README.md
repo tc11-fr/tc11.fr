@@ -54,12 +54,69 @@ tc11.fr/
 │   ├── actus.json     # Liste des actualités
 │   └── posts/         # Articles et actualités
 ├── public/            # Fichiers statiques (images, scripts)
+│   ├── reactions.js   # Système de likes et vues
+│   └── style.css      # Styles CSS
 ├── templates/         # Modèles de page
 │   ├── layouts/       # Mises en page
 │   └── partials/      # Composants réutilisables
 ├── src/               # Code source Java (si nécessaire)
 └── pom.xml            # Configuration Maven
 ```
+
+## ❤️ Système de likes et vues
+
+Le site dispose d'un système de likes et de compteur de vues pour les articles. Pour un site statique, plusieurs options sont disponibles :
+
+### Option 1 : localStorage (par défaut)
+
+Stockage local dans le navigateur. Les likes sont persistants par navigateur mais pas partagés entre appareils.
+
+**Avantages :**
+- Aucune configuration requise
+- Fonctionne immédiatement
+- Respect de la vie privée
+
+**Inconvénients :**
+- Données non partagées entre appareils/navigateurs
+- Compteurs individuels par utilisateur
+
+### Option 2 : Supabase (recommandé pour la persistance)
+
+Base de données PostgreSQL gratuite avec API REST pour des compteurs partagés.
+
+**Configuration :**
+
+1. Créer un compte sur [supabase.com](https://supabase.com)
+2. Créer une table `article_reactions` :
+   ```sql
+   CREATE TABLE article_reactions (
+     article_id TEXT PRIMARY KEY,
+     likes INTEGER DEFAULT 0,
+     views INTEGER DEFAULT 0
+   );
+   ```
+3. Configurer dans `templates/partials/head.html` :
+   ```html
+   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+   <script>
+     window.TC11_REACTIONS_CONFIG = {
+       backend: 'supabase',
+       supabaseUrl: 'https://your-project.supabase.co',
+       supabaseAnonKey: 'your-anon-key'
+     };
+   </script>
+   ```
+
+**Avantages :**
+- Compteurs partagés entre tous les visiteurs
+- Tier gratuit généreux
+- API REST simple
+
+### Autres options
+
+- **Firebase Realtime Database** : Alternative à Supabase
+- **Cloudflare Workers + KV** : Pour hébergement sur Cloudflare
+- **Giscus** : Basé sur GitHub Discussions (commentaires + réactions)
 
 ## 🤝 Contribuer
 

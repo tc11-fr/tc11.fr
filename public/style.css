@@ -170,3 +170,86 @@ body.preview-banner-shown {
   }
 }
 [x-cloak]{display:none!important}
+
+/* Article Reactions Styles */
+.reaction-btn,
+.reaction-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.reaction-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  cursor: pointer;
+}
+
+.reaction-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.reaction-info {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.reaction-count {
+  min-width: 1.2em;
+  text-align: center;
+}
+
+/* Like button states */
+.like-btn .like-icon {
+  display: inline;
+}
+
+.like-btn .like-icon-filled {
+  display: none;
+}
+
+.like-btn.liked {
+  background: rgba(239, 68, 68, 0.9);
+  border-color: rgba(239, 68, 68, 1);
+}
+
+.like-btn.liked .like-icon {
+  display: none;
+}
+
+.like-btn.liked .like-icon-filled {
+  display: inline;
+  color: white;
+}
+
+.like-btn.liked:hover {
+  background: rgba(239, 68, 68, 1);
+}
+
+/* Like animation */
+.like-btn.like-animate {
+  animation: likePopup 0.3s ease;
+}
+
+@keyframes likePopup {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Responsive adjustments for reactions */
+@media (max-width: 640px) {
+  .reaction-btn,
+  .reaction-info {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
