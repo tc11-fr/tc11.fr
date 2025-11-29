@@ -39,11 +39,14 @@
 
   /**
    * Get article ID from current URL
+   * Uses the full pathname to ensure unique IDs for each article
    */
   function getArticleId() {
     const path = window.location.pathname;
-    // Remove trailing slash and return
-    return path.replace(/\/$/, '') || '/';
+    // Remove trailing slash but keep the full path for unique identification
+    const normalizedPath = path.replace(/\/$/, '');
+    // Return the normalized path or a fallback for the homepage
+    return normalizedPath || 'homepage';
   }
 
   /**
@@ -194,21 +197,32 @@
       if (!this.supabase) return localStorageAdapter.incrementViews(articleId);
       
       try {
-        // First try to get current views
-        const { data: existing } = await this.supabase
-          .from('article_reactions')
-          .select('views')
-          .eq('article_id', articleId)
-          .single();
+        // Use RPC for atomic increment to avoid race conditions
+        // This requires a Supabase function: increment_views(article_id_param TEXT)
+        // If RPC is not available, fall back to upsert with current timestamp for uniqueness
+        const { data, error } = await this.supabase
+          .rpc('increment_views', { article_id_param: articleId });
         
-        const newViews = (existing?.views || 0) + 1;
+        if (error) {
+          // Fallback: use upsert if RPC is not available
+          // Note: This has a potential race condition but is better than nothing
+          console.warn('RPC not available, falling back to upsert');
+          const { data: existing } = await this.supabase
+            .from('article_reactions')
+            .select('views')
+            .eq('article_id', articleId)
+            .single();
+          
+          const newViews = (existing?.views || 0) + 1;
+          
+          await this.supabase
+            .from('article_reactions')
+            .upsert({ article_id: articleId, views: newViews }, { onConflict: 'article_id' });
+          
+          return newViews;
+        }
         
-        const { error } = await this.supabase
-          .from('article_reactions')
-          .upsert({ article_id: articleId, views: newViews }, { onConflict: 'article_id' });
-        
-        if (error) throw error;
-        return newViews;
+        return data || 1;
       } catch (e) {
         console.error('Supabase error incrementing views:', e);
         return localStorageAdapter.incrementViews(articleId);
@@ -284,10 +298,11 @@
 
     // Initialize like button
     if (likeButton && likeCount) {
-      const likes = await adapter.getLikes(articleId);
+      // Cache the initial like count to avoid refetching on every click
+      let cachedLikes = await adapter.getLikes(articleId);
       const userHasLiked = adapter.hasUserLiked(articleId);
 
-      likeCount.textContent = formatCount(likes);
+      likeCount.textContent = formatCount(cachedLikes);
       
       if (userHasLiked) {
         likeButton.classList.add('liked');
@@ -298,11 +313,14 @@
         e.preventDefault();
         
         const isCurrentlyLiked = adapter.hasUserLiked(articleId);
-        const currentLikes = await adapter.getLikes(articleId);
-        const newLikes = isCurrentlyLiked ? Math.max(0, currentLikes - 1) : currentLikes + 1;
+        // Use cached value instead of fetching again
+        const newLikes = isCurrentlyLiked ? Math.max(0, cachedLikes - 1) : cachedLikes + 1;
 
         await adapter.setLikes(articleId, newLikes);
         adapter.setUserLiked(articleId, !isCurrentlyLiked);
+        
+        // Update cache
+        cachedLikes = newLikes;
 
         likeCount.textContent = formatCount(newLikes);
         

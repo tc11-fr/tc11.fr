@@ -95,7 +95,23 @@ Base de données PostgreSQL gratuite avec API REST pour des compteurs partagés.
      views INTEGER DEFAULT 0
    );
    ```
-3. Configurer dans `templates/partials/head.html` :
+3. (Optionnel) Créer une fonction RPC pour l'incrémentation atomique des vues :
+   ```sql
+   CREATE OR REPLACE FUNCTION increment_views(article_id_param TEXT)
+   RETURNS INTEGER AS $$
+   DECLARE
+     new_views INTEGER;
+   BEGIN
+     INSERT INTO article_reactions (article_id, views)
+     VALUES (article_id_param, 1)
+     ON CONFLICT (article_id)
+     DO UPDATE SET views = article_reactions.views + 1
+     RETURNING views INTO new_views;
+     RETURN new_views;
+   END;
+   $$ LANGUAGE plpgsql;
+   ```
+4. Configurer dans `templates/partials/head.html` :
    ```html
    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
    <script>
