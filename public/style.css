@@ -148,6 +148,26 @@ body{font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ari
 .preview-banner-close:hover {
   background: rgba(255,255,255,0.35);
 }
+.preview-banner-link {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.preview-banner-link:hover {
+  background: rgba(255,255,255,0.35);
+  text-decoration: none;
+}
 /* Adjust body padding when banner is visible */
 body.preview-banner-shown {
   padding-top: 60px;
@@ -155,6 +175,7 @@ body.preview-banner-shown {
 @media (max-width: 640px) {
   .preview-banner-content {
     padding: 10px 12px;
+    flex-wrap: wrap;
   }
   .preview-banner-icon {
     font-size: 20px;
@@ -165,8 +186,17 @@ body.preview-banner-shown {
   .preview-banner-subtitle {
     font-size: 11px;
   }
+  .preview-banner-link {
+    padding: 6px 10px;
+    font-size: 11px;
+    order: 4;
+    margin-top: 6px;
+    width: 100%;
+    justify-content: center;
+  }
+  /* 80px = banner content (~52px) + PR link row (~22px) + margins (6px) on mobile where link wraps to new line */
   body.preview-banner-shown {
-    padding-top: 52px;
+    padding-top: 80px;
   }
 }
 [x-cloak]{display:none!important}

@@ -6,6 +6,9 @@
       <strong>Environnement de prévisualisation</strong>
       <span class="preview-banner-subtitle">Ce n'est pas le site officiel - Site de test uniquement</span>
     </div>
+    <a id="preview-banner-pr-link" href="#" class="preview-banner-link" style="display: none;" target="_blank" rel="noopener noreferrer">
+      💬 Donner votre avis sur la PR
+    </a>
     <button id="preview-banner-close" class="preview-banner-close" aria-label="Fermer">✕</button>
   </div>
 </div>
@@ -16,10 +19,23 @@
   if (window.location.hostname.includes('surge.sh') || window.location.hostname.includes('preview')) {
     var banner = document.getElementById('preview-banner');
     var closeBtn = document.getElementById('preview-banner-close');
+    var prLink = document.getElementById('preview-banner-pr-link');
     
     if (banner) {
       banner.style.display = 'block';
       document.body.classList.add('preview-banner-shown');
+    }
+    
+    // Extract PR number from hostname (format: pr-[NUMBER]-roq-preview.surge.sh)
+    var hostname = window.location.hostname;
+    var prMatch = hostname.match(/^pr-(\d+)-/);
+    if (prMatch && prMatch[1] && prLink) {
+      var prNumber = prMatch[1];
+      // Validate PR number contains only digits (additional safety check)
+      if (/^\d+$/.test(prNumber)) {
+        prLink.href = 'https://github.com/tc11-fr/tc11.fr/pull/' + prNumber;
+        prLink.style.display = 'inline-flex';
+      }
     }
     
     if (closeBtn) {
