@@ -194,6 +194,7 @@ body.preview-banner-shown {
     width: 100%;
     justify-content: center;
   }
+  /* 80px = banner content (~52px) + PR link row (~22px) + margins (6px) on mobile where link wraps to new line */
   body.preview-banner-shown {
     padding-top: 80px;
   }

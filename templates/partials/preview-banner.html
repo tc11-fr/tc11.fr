@@ -31,8 +31,11 @@
     var prMatch = hostname.match(/^pr-(\d+)-/);
     if (prMatch && prMatch[1] && prLink) {
       var prNumber = prMatch[1];
-      prLink.href = 'https://github.com/tc11-fr/tc11.fr/pull/' + prNumber;
-      prLink.style.display = 'inline-flex';
+      // Validate PR number contains only digits (additional safety check)
+      if (/^\d+$/.test(prNumber)) {
+        prLink.href = 'https://github.com/tc11-fr/tc11.fr/pull/' + prNumber;
+        prLink.style.display = 'inline-flex';
+      }
     }
     
     if (closeBtn) {
