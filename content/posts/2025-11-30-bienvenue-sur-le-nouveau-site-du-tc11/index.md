@@ -9,6 +9,16 @@ labelDetails: "Découvrir le site →"
 
 Nous sommes heureux de vous présenter la **nouvelle version du site du Tennis Club du 11e** !
 
+## Pourquoi un nouveau site ?
+
+Récemment, la **FFT (Fédération Française de Tennis)** a mis fin aux sites web hébergés sur son CMS pour de nombreux clubs à travers la France. TenUp offre une alternative intéressante, mais manque de flexibilité pour répondre à tous nos besoins.
+
+Avec notre propre site web, nous gagnons en **liberté de personnalisation** et pouvons vous offrir une expérience sur mesure. Ce projet est **open source** et nous accueillons vos idées avec plaisir ! N'hésitez pas à proposer vos suggestions sur notre dépôt GitHub : [https://github.com/tc11-fr/tc11.fr/issues](https://github.com/tc11-fr/tc11.fr/issues)
+
+---
+
+## Ce que vous trouverez ici
+
 Ce site a été entièrement repensé pour vous offrir une expérience moderne et intuitive. Voici ce que vous y trouverez :
 
 ---
