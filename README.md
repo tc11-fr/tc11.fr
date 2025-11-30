@@ -128,11 +128,45 @@ Base de données PostgreSQL gratuite avec API REST pour des compteurs partagés.
 - Tier gratuit généreux
 - API REST simple
 
+### Option 3 : Giscus (commentaires + réactions via GitHub)
+
+[Giscus](https://giscus.app) utilise GitHub Discussions pour gérer les réactions et commentaires. Idéal pour les projets open source hébergés sur GitHub.
+
+**Configuration :**
+
+1. Activer GitHub Discussions sur votre dépôt
+2. Installer l'application [Giscus](https://github.com/apps/giscus) sur votre dépôt
+3. Générer la configuration sur [giscus.app](https://giscus.app)
+4. Configurer dans `templates/partials/head.html` :
+   ```html
+   <script>
+     window.TC11_REACTIONS_CONFIG = {
+       backend: 'giscus',
+       giscusRepo: 'owner/repo',
+       giscusRepoId: 'R_kgDOxxxxxx',
+       giscusCategory: 'Announcements',
+       giscusCategoryId: 'DIC_kwDOxxxxxx',
+       giscusMapping: 'pathname',
+       giscusTheme: 'light',
+       giscusLang: 'fr'
+     };
+   </script>
+   ```
+
+**Avantages :**
+- Commentaires + réactions intégrés
+- Authentification via GitHub
+- Aucune base de données requise
+- Modération via GitHub
+
+**Inconvénients :**
+- Nécessite un compte GitHub pour interagir
+- Limité aux projets hébergés sur GitHub
+
 ### Autres options
 
 - **Firebase Realtime Database** : Alternative à Supabase
 - **Cloudflare Workers + KV** : Pour hébergement sur Cloudflare
-- **Giscus** : Basé sur GitHub Discussions (commentaires + réactions)
 
 ## 🤝 Contribuer
 

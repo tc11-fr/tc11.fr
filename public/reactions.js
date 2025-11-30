@@ -3,18 +3,27 @@
  * 
  * Provides like and view tracking for articles.
  * Uses localStorage for persistence by default.
- * Can be extended with Supabase or other backends for cross-device persistence.
+ * Can be extended with Supabase, Giscus or other backends for cross-device persistence.
  * 
  * Options for static sites:
  * 1. localStorage (default) - Likes stored locally per browser
  * 2. Supabase - Free PostgreSQL database with REST API (requires configuration)
+ * 3. Giscus - GitHub Discussions-based reactions and comments (requires GitHub repo)
  * 
  * Configuration in templates/partials/head.html:
  * <script>
  *   window.TC11_REACTIONS_CONFIG = {
- *     backend: 'localStorage', // or 'supabase'
+ *     backend: 'localStorage', // or 'supabase' or 'giscus'
  *     supabaseUrl: 'https://your-project.supabase.co',
- *     supabaseAnonKey: 'your-anon-key'
+ *     supabaseAnonKey: 'your-anon-key',
+ *     // Giscus configuration (get from https://giscus.app)
+ *     giscusRepo: 'owner/repo',
+ *     giscusRepoId: 'R_...',
+ *     giscusCategory: 'Announcements',
+ *     giscusCategoryId: 'DIC_...',
+ *     giscusMapping: 'pathname', // or 'url', 'title', 'og:title', 'specific', 'number'
+ *     giscusTheme: 'light', // or 'dark', 'preferred_color_scheme', custom URL
+ *     giscusLang: 'fr'
  *   };
  * </script>
  */
@@ -33,7 +42,15 @@
     return Object.assign({
       backend: 'localStorage',
       supabaseUrl: null,
-      supabaseAnonKey: null
+      supabaseAnonKey: null,
+      // Giscus configuration
+      giscusRepo: null,
+      giscusRepoId: null,
+      giscusCategory: null,
+      giscusCategoryId: null,
+      giscusMapping: 'pathname',
+      giscusTheme: 'light',
+      giscusLang: 'fr'
     }, window.TC11_REACTIONS_CONFIG || {});
   }
 
@@ -240,10 +257,78 @@
   };
 
   /**
+   * Giscus adapter - uses GitHub Discussions for reactions and comments
+   * When Giscus is enabled, the built-in like/view UI is hidden and Giscus widget is shown instead
+   */
+  const giscusAdapter = {
+    initialized: false,
+
+    init() {
+      const config = getConfig();
+      if (!config.giscusRepo || !config.giscusRepoId || !config.giscusCategoryId) {
+        console.warn('Giscus not configured, falling back to localStorage');
+        return false;
+      }
+      this.initialized = true;
+      return true;
+    },
+
+    /**
+     * Inject Giscus widget into the page
+     */
+    injectGiscusWidget() {
+      const config = getConfig();
+      const container = document.getElementById('giscus-container');
+      
+      if (!container) {
+        console.warn('Giscus container not found');
+        return;
+      }
+
+      // Create Giscus script
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', config.giscusRepo);
+      script.setAttribute('data-repo-id', config.giscusRepoId);
+      script.setAttribute('data-category', config.giscusCategory || 'Announcements');
+      script.setAttribute('data-category-id', config.giscusCategoryId);
+      script.setAttribute('data-mapping', config.giscusMapping || 'pathname');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', config.giscusTheme || 'light');
+      script.setAttribute('data-lang', config.giscusLang || 'fr');
+      script.crossOrigin = 'anonymous';
+      script.async = true;
+
+      container.appendChild(script);
+    },
+
+    /**
+     * Giscus handles its own reactions via GitHub Discussions reactions.
+     * Likes are managed entirely by Giscus widget (users react via GitHub).
+     * Views are still tracked locally for analytics purposes since Giscus
+     * doesn't provide view tracking functionality.
+     */
+    async getLikes() { return 0; },
+    async setLikes() {},
+    async getViews(articleId) { return localStorageAdapter.getViews(articleId); },
+    async incrementViews(articleId) { return localStorageAdapter.incrementViews(articleId); },
+    hasUserLiked() { return false; },
+    setUserLiked() {}
+  };
+
+  /**
    * Get the appropriate storage adapter based on configuration
    */
   function getAdapter() {
     const config = getConfig();
+    if (config.backend === 'giscus') {
+      if (giscusAdapter.init()) {
+        return giscusAdapter;
+      }
+    }
     if (config.backend === 'supabase') {
       if (supabaseAdapter.init()) {
         return supabaseAdapter;
@@ -266,18 +351,13 @@
   }
 
   /**
-   * Initialize the reactions system
+   * Track article view (once per session per article)
+   * @param {string} articleId - The article identifier
+   * @param {object} adapter - The storage adapter to use
+   * @param {HTMLElement|null} viewCountElement - Optional element to update with view count
+   * @returns {Promise<boolean>} - Whether a new view was tracked
    */
-  async function initReactions() {
-    const articleId = getArticleId();
-    const adapter = getAdapter();
-
-    // Find reaction containers
-    const likeButton = document.getElementById('like-button');
-    const likeCount = document.getElementById('like-count');
-    const viewCount = document.getElementById('view-count');
-
-    // Track view (only once per session per article)
+  async function trackView(articleId, adapter, viewCountElement) {
     const sessionViewsKey = 'tc11_session_views';
     let sessionViews = [];
     try {
@@ -286,15 +366,55 @@
       sessionViews = [];
     }
 
-    if (viewCount && !sessionViews.includes(articleId)) {
+    if (!sessionViews.includes(articleId)) {
       const views = await adapter.incrementViews(articleId);
-      viewCount.textContent = formatCount(views);
+      if (viewCountElement) {
+        viewCountElement.textContent = formatCount(views);
+      }
       sessionViews.push(articleId);
       sessionStorage.setItem(sessionViewsKey, JSON.stringify(sessionViews));
-    } else if (viewCount) {
+      return true;
+    } else if (viewCountElement) {
       const views = await adapter.getViews(articleId);
-      viewCount.textContent = formatCount(views);
+      viewCountElement.textContent = formatCount(views);
     }
+    return false;
+  }
+
+  /**
+   * Initialize the reactions system
+   */
+  async function initReactions() {
+    const config = getConfig();
+    const articleId = getArticleId();
+    const adapter = getAdapter();
+
+    // Find reaction containers
+    const likeButton = document.getElementById('like-button');
+    const likeCount = document.getElementById('like-count');
+    const viewCount = document.getElementById('view-count');
+    const reactionsGroup = document.querySelector('[role="group"][aria-label="Réactions de l\'article"]');
+    const giscusContainer = document.getElementById('giscus-container');
+
+    // If Giscus is enabled, hide built-in reactions and show Giscus widget
+    if (config.backend === 'giscus' && giscusAdapter.initialized) {
+      // Hide the built-in reactions UI
+      if (reactionsGroup) {
+        reactionsGroup.style.display = 'none';
+      }
+      // Show and initialize Giscus
+      if (giscusContainer) {
+        giscusContainer.style.display = 'block';
+        giscusAdapter.injectGiscusWidget();
+      }
+      
+      // Still track views locally for analytics (without UI update)
+      await trackView(articleId, adapter, null);
+      return;
+    }
+
+    // Track view with UI update
+    await trackView(articleId, adapter, viewCount);
 
     // Initialize like button
     if (likeButton && likeCount) {
