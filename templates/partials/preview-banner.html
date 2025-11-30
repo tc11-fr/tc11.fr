@@ -26,7 +26,7 @@
       document.body.classList.add('preview-banner-shown');
     }
     
-    // Extract PR number from hostname (format: pr-{NUMBER}-roq-preview.surge.sh)
+    // Extract PR number from hostname (format: pr-[NUMBER]-roq-preview.surge.sh)
     var hostname = window.location.hostname;
     var prMatch = hostname.match(/^pr-(\d+)-/);
     if (prMatch && prMatch[1] && prLink) {
