@@ -15,13 +15,9 @@ Récemment, la **FFT (Fédération Française de Tennis)** a mis fin aux sites w
 
 Avec notre propre site web, nous gagnons en **liberté de personnalisation** et pouvons vous offrir une expérience sur mesure. Ce projet est **open source** et nous accueillons vos idées avec plaisir ! N'hésitez pas à proposer vos suggestions sur notre dépôt GitHub : [https://github.com/tc11-fr/tc11.fr/issues](https://github.com/tc11-fr/tc11.fr/issues)
 
----
-
 ## Ce que vous trouverez ici
 
 Ce site a été entièrement repensé pour vous offrir une expérience moderne et intuitive. Voici ce que vous y trouverez :
-
----
 
 ## 🎾 Accédez à TenUp
 
@@ -40,21 +36,15 @@ Le bouton **« Mon espace TenUp »** est disponible dans le menu en haut à droi
 
 > 💡 Sur mobile, ces liens ouvrent directement l'application TenUp si elle est installée !
 
----
-
 ## 📰 Actualités
 
 La section **Actus**, accessible depuis le menu ou la page principale, vous permet de suivre toute l'actualité du club : résultats des interclubs, annonces de stages, événements, et bien plus encore.
 
 Chaque article peut contenir du **contenu riche** (images, galeries, fichiers à télécharger). Vous pouvez également **réagir avec des emojis** et **laisser des commentaires** en bas de chaque page pour partager vos impressions !
 
----
-
 ## 📸 Galerie Instagram
 
 La **galerie Instagram**, visible sur la page d'accueil, affiche automatiquement les dernières publications de notre compte [@tc11assb](https://www.instagram.com/tc11assb/). Suivez nos aventures en images directement depuis le site !
-
----
 
 ## 🏟️ Présentation du club
 
@@ -69,19 +59,13 @@ La section **Le Club**, accessible depuis le menu, présente le TC11 en quelques
 
 Tennis pour toutes et tous, du loisir à la compétition, pour enfants (à partir de 5 ans) et adultes. Club récompensé pour son action en faveur du tennis féminin et labellisé *Tennis Santé*.
 
----
-
 ## 🗺️ Installations et carte
 
 La section **Installations**, accessible depuis la page principale, présente la liste de **nos 8 sites** avec photos, adresses et types de revêtement. Une **carte interactive** vous permet de localiser facilement tous les courts disponibles.
 
----
-
 ## 📧 Contact
 
 La section **Contact**, accessible depuis le menu ou la page principale, vous permet de retrouver facilement l'adresse email du club. Une question ? Envie de rejoindre le TC11 ? Un simple clic pour nous écrire !
-
----
 
 ## 🛠️ Technologies et hébergement
 
@@ -93,6 +77,5 @@ Ce site est construit avec des technologies modernes et performantes :
 
 Le site est hébergé gratuitement sur **GitHub Pages**, garantissant rapidité et fiabilité. Le code source est entièrement **open source** et disponible sur [GitHub](https://github.com/tc11-fr/tc11.fr).
 
----
 
 Bonne visite et à très bientôt sur les courts ! 🎾
