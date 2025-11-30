@@ -18,7 +18,7 @@ labelDetails: Voir le détail →
     </div>
     <h1 class="mt-3 text-3xl md:text-5xl font-extrabold leading-tight">{page.title}</h1>
     <p class="mt-2 text-white/90 max-w-2xl">{summary ?: ''}</p>
-    <div class="mt-4 flex items-center gap-3">
+    <div class="mt-4 flex items-center gap-3 flex-wrap">
       <a href="/{backlink ?: '#actus'}" class="btn bg-white text-tc-ink">← Retour aux actus</a>
       <a class="icon-btn" aria-label="Partager sur Facebook"
          href="https://www.facebook.com/sharer/sharer.php?u={share_url ?: ''}" target="_blank" rel="noopener">
@@ -28,6 +28,18 @@ labelDetails: Voir le détail →
          href="https://twitter.com/intent/tweet?text={page.title}&url={share_url ?: ''}" target="_blank" rel="noopener">
         <span class="iconify" data-icon="mdi:twitter"></span>
       </a>
+      <!-- Reactions: likes and views -->
+      <div class="flex items-center gap-3 ml-auto" role="group" aria-label="Réactions de l'article">
+        <button id="like-button" class="reaction-btn like-btn" aria-label="J'aime cet article" aria-pressed="false">
+          <span class="iconify like-icon" data-icon="mdi:heart-outline"></span>
+          <span class="iconify like-icon-filled" data-icon="mdi:heart"></span>
+          <span id="like-count" class="reaction-count">0</span>
+        </button>
+        <div class="reaction-info view-info" role="status" aria-label="Nombre de vues">
+          <span class="iconify" data-icon="mdi:eye-outline"></span>
+          <span id="view-count" class="reaction-count">0</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -89,3 +101,11 @@ labelDetails: Voir le détail →
     </div>
   {/if}
 </section>
+
+<!-- Giscus Container (hidden by default, shown when Giscus backend is enabled) -->
+<div id="giscus-container" class="max-w-6xl mx-auto px-4 py-8" style="display: none;">
+  <!-- Giscus widget will be injected here -->
+</div>
+
+<!-- Article Reactions Script -->
+<script src="/reactions.js"></script>
