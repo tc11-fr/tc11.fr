@@ -17,12 +17,12 @@
  *     supabaseUrl: 'https://your-project.supabase.co',
  *     supabaseAnonKey: 'your-anon-key',
  *     // Giscus configuration (get from https://giscus.app)
- *     giscusRepo: 'owner/repo',
- *     giscusRepoId: 'R_...',
+ *     giscusRepo: 'tc11-fr/tc11.fr',
+ *     giscusRepoId: 'R_kgDOPa7m9g',
  *     giscusCategory: 'Announcements',
- *     giscusCategoryId: 'DIC_...',
+ *     giscusCategoryId: 'DIC_kwDOPa7m9s4CzNU1',
  *     giscusMapping: 'pathname', // or 'url', 'title', 'og:title', 'specific', 'number'
- *     giscusTheme: 'light', // or 'dark', 'preferred_color_scheme', custom URL
+ *     giscusTheme: 'preferred_color_scheme', // or 'light', 'dark', custom URL
  *     giscusLang: 'fr'
  *   };
  * </script>
@@ -43,13 +43,13 @@
       backend: 'localStorage',
       supabaseUrl: null,
       supabaseAnonKey: null,
-      // Giscus configuration
-      giscusRepo: null,
-      giscusRepoId: null,
-      giscusCategory: null,
-      giscusCategoryId: null,
+      // Giscus configuration - TC11 defaults
+      giscusRepo: 'tc11-fr/tc11.fr',
+      giscusRepoId: 'R_kgDOPa7m9g',
+      giscusCategory: 'Announcements',
+      giscusCategoryId: 'DIC_kwDOPa7m9s4CzNU1',
       giscusMapping: 'pathname',
-      giscusTheme: 'light',
+      giscusTheme: 'preferred_color_scheme',
       giscusLang: 'fr'
     }, window.TC11_REACTIONS_CONFIG || {});
   }
@@ -297,7 +297,7 @@
       script.setAttribute('data-reactions-enabled', '1');
       script.setAttribute('data-emit-metadata', '0');
       script.setAttribute('data-input-position', 'bottom');
-      script.setAttribute('data-theme', config.giscusTheme || 'light');
+      script.setAttribute('data-theme', config.giscusTheme || 'preferred_color_scheme');
       script.setAttribute('data-lang', config.giscusLang || 'fr');
       script.crossOrigin = 'anonymous';
       script.async = true;

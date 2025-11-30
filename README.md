@@ -142,12 +142,12 @@ Base de données PostgreSQL gratuite avec API REST pour des compteurs partagés.
    <script>
      window.TC11_REACTIONS_CONFIG = {
        backend: 'giscus',
-       giscusRepo: 'owner/repo',
-       giscusRepoId: 'R_kgDOxxxxxx',
+       giscusRepo: 'tc11-fr/tc11.fr',
+       giscusRepoId: 'R_kgDOPa7m9g',
        giscusCategory: 'Announcements',
-       giscusCategoryId: 'DIC_kwDOxxxxxx',
+       giscusCategoryId: 'DIC_kwDOPa7m9s4CzNU1',
        giscusMapping: 'pathname',
-       giscusTheme: 'light',
+       giscusTheme: 'preferred_color_scheme',
        giscusLang: 'fr'
      };
    </script>
