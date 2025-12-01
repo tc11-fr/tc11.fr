@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@source "../../../templates/**/*.html";
+@source "../../../content/**/*.html";
+@source "../../../content/**/*.md";
+
+@theme {
+  --color-tc-orange: var(--tc-orange);
+  --color-tc-orange-dark: var(--tc-orange-dark);
+  --color-tc-yellow: var(--tc-yellow);
+  --color-tc-yellow-dark: var(--tc-yellow-dark);
+  --color-tc-white: var(--tc-white);
+  --color-tc-ink: var(--tc-ink);
+  --shadow-soft: 0 10px 25px rgba(0,0,0,.08);
+}
