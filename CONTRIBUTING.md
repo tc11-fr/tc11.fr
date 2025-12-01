@@ -2,75 +2,75 @@
 
 Thank you for contributing to the TC11 website! 🎾
 
-## ✏️ Mettre à jour le contenu du site
+## ✏️ Updating Site Content
 
-### 📰 Ajouter une actualité / article
+### 📰 Adding a News Article
 
-Les articles sont stockés dans `content/posts/`. Pour ajouter un nouvel article :
+Articles are stored in `content/posts/`. To add a new article:
 
-1. Créer un dossier avec le format `YYYY-MM-DD-titre-de-larticle` dans `content/posts/`
-2. Ajouter un fichier `index.md` dans ce dossier avec le contenu suivant :
+1. Create a folder with the format `YYYY-MM-DD-article-title` in `content/posts/`
+2. Add an `index.md` file in this folder with the following content:
 
 ```markdown
 ---
-title: "Titre de l'article"
-description: "Description courte de l'article"
+title: "Article Title"
+description: "Short description of the article"
 category: "Club"
 date: "2025-12-01"
 layout: layouts/post.html
-labelDetails: "Lire la suite →"
+labelDetails: "Read more →"
 ---
 
-Contenu de l'article en Markdown...
+Article content in Markdown...
 ```
 
-**Propriétés disponibles :**
-- `title` : Titre affiché de l'article
-- `description` : Résumé affiché dans la liste des actualités
-- `category` : Catégorie (ex: "Club", "Interclubs", "Stages")
-- `date` : Date de publication (format YYYY-MM-DD)
-- `labelDetails` : Texte du lien "Voir le détail" (optionnel)
+**Available properties:**
+- `title`: Displayed article title
+- `description`: Summary shown in the news list
+- `category`: Category (e.g., "Club", "Interclubs", "Stages")
+- `date`: Publication date (YYYY-MM-DD format)
+- `labelDetails`: "View details" link text (optional)
 
-### 🏟️ Modifier les installations
+### 🏟️ Updating Installations
 
-Les installations sont configurées dans `content/installations.json`. Pour modifier, ajouter ou supprimer une installation :
+Installations are configured in `content/installations.json`. To modify, add, or remove an installation:
 
-1. Ouvrir le fichier `content/installations.json`
-2. Modifier l'objet JSON correspondant
+1. Open the `content/installations.json` file
+2. Edit the corresponding JSON object
 
-**Format d'une installation :**
+**Installation format:**
 
 ```json
 {
-  "name": "Nom de l'installation",
-  "image": "/assets/installations/nom-image.jpg",
+  "name": "Installation Name",
+  "image": "/assets/installations/image-name.jpg",
   "coords": [48.8382777, 2.4081032],
   "terrains": 4,
-  "surface": "béton poreux",
+  "surface": "porous concrete",
   "url": "https://www.paris.fr/lieux/..."
 }
 ```
 
-**Propriétés :**
-- `name` : Nom de l'installation
-- `image` : Chemin vers l'image (stocker dans `public/assets/installations/`)
-- `coords` : Coordonnées GPS `[latitude, longitude]` pour la carte
-- `terrains` : Nombre de terrains
-- `surface` : Type de revêtement (ex: "béton poreux", "terre battue", "gazon synthétique")
-- `url` : Lien vers la page officielle de l'installation
+**Properties:**
+- `name`: Installation name
+- `image`: Path to the image (store in `public/assets/installations/`)
+- `coords`: GPS coordinates `[latitude, longitude]` for the map
+- `terrains`: Number of courts
+- `surface`: Surface type (e.g., "porous concrete", "clay", "synthetic grass")
+- `url`: Link to the official installation page
 
-> 💡 N'oubliez pas d'ajouter l'image correspondante dans `public/assets/installations/`
+> 💡 Don't forget to add the corresponding image in `public/assets/installations/`
 
-### 📸 Galerie Instagram
+### 📸 Instagram Gallery
 
-Les posts Instagram sont récupérés automatiquement depuis le compte [@tc11assb](https://www.instagram.com/tc11assb/) selon cette chaîne de priorité :
+Instagram posts are fetched automatically from the [@tc11assb](https://www.instagram.com/tc11assb/) account using this priority chain:
 
-1. **RSS Bridge** (par défaut) : Récupération via service RSS, sans authentification
-2. **API Instagram Graph** : Si des identifiants sont configurés
-3. **Scraping Playwright** : En dernier recours, via navigateur headless
-4. **Liste de secours** : Si tout échoue, utilise `src/main/resources/instagram.json`
+1. **RSS Bridge** (default): Fetching via RSS service, no authentication required
+2. **Instagram Graph API**: If credentials are configured
+3. **Playwright Scraping**: As a last resort, via headless browser
+4. **Fallback list**: If all else fails, uses `src/main/resources/instagram.json`
 
-Pour mettre à jour la liste de secours, modifiez le fichier `src/main/resources/instagram.json` :
+To update the fallback list, edit the `src/main/resources/instagram.json` file:
 
 ```json
 [
@@ -79,22 +79,22 @@ Pour mettre à jour la liste de secours, modifiez le fichier `src/main/resources
 ]
 ```
 
-Remplacez les URLs par les posts Instagram souhaités (format : `https://www.instagram.com/p/XXXXXX`).
+Replace the URLs with the desired Instagram posts (format: `https://www.instagram.com/p/XXXXXX`).
 
-### 📧 Modifier les informations de contact
+### 📧 Updating Contact Information
 
-L'adresse email de contact est configurée dans `src/main/resources/application.properties` :
+The contact email is configured in `src/main/resources/application.properties`:
 
 ```properties
 tc11.contact.email=tc11-assb@fft.fr
 ```
 
-### 🏠 Modifier la page d'accueil
+### 🏠 Updating the Homepage
 
-Le contenu de la page d'accueil se trouve dans `content/index.html`. Vous pouvez modifier :
-- Les textes de présentation du club
-- Les statistiques affichées
-- La structure des sections
+The homepage content is located in `content/index.html`. You can modify:
+- Club presentation texts
+- Displayed statistics
+- Section structure
 
 ## 📝 Pull Request Title Convention
 
