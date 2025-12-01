@@ -1,0 +1,19 @@
+name: Créer une tâche
+description: Créer une tâche à réaliser pour le site TC11
+title: "[Tâche] "
+labels: ["task"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "- Description de la tâche"
+      placeholder: "Décrivez la tâche à réaliser…"
+    validations:
+      required: true
+  - type: textarea
+    id: contexte
+    attributes:
+      label: "- Contexte ou objectif"
+      placeholder: "Expliquez le contexte ou l'objectif de cette tâche…"
+    validations:
+      required: false
