@@ -60,6 +60,7 @@ tc11.fr/
 │   └── partials/          # Reusable components (head.html, header.html, footer.html)
 ├── src/main/java/fr/tc11/ # Java source code
 │   ├── ContactTemplateExtension.java    # {contact:email} template helper
+│   ├── FilesViewHelpers.java            # {files:images(page)} template helper
 │   ├── InstagramPostsFetcher.java       # Instagram feed fetcher
 │   └── InstagramTemplateExtension.java  # {instagram:posts} template helper
 ├── src/main/resources/
@@ -74,7 +75,7 @@ tc11.fr/
 
 | File | Purpose |
 |------|---------|
-| `pom.xml` | Maven dependencies, Java 21, Quarkus 3.25.2, quarkus-roq 1.8.0 |
+| `pom.xml` | Maven dependencies: Java 21, Quarkus 3.25.2, quarkus-roq 1.8.0, Playwright 1.49.0 |
 | `src/main/resources/application.properties` | Instagram fetcher config, contact email |
 | `.github/workflows/deploy.yml` | Main deploy to GitHub Pages on push to main |
 | `.github/workflows/preview-pr.yml` | PR preview via Surge on `/preview` comment |
