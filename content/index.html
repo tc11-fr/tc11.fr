@@ -75,7 +75,7 @@ layout: layouts/page.html
         <img :src="installation.image" :alt="installation.name" class="w-full h-40 object-cover">
         <div class="p-4">
           <h5 class="font-bold text-tc-orange" x-text="installation.name"></h5>
-          <p class="text-sm text-slate-600" x-text="'Tennis — ' + installation.terrains + ' terrain' + (installation.terrains > 1 ? 's' : '') + ' — Revêtement : ' + installation.surface"></p>
+          <p class="text-sm text-slate-600" x-text="installation.terrains + ' terrain' + (installation.terrains > 1 ? 's' : '') + ' — Revêtement : ' + installation.surface"></p>
         </div>
       </a>
     </template>
