@@ -51,7 +51,7 @@ Les fichiers générés se trouvent dans le dossier `target/roq/`.
 tc11.fr/
 ├── content/               # Contenu du site (pages, actualités)
 │   ├── index.html         # Page d'accueil
-│   ├── actus.json         # Liste des actualités (généré automatiquement)
+│   ├── actus.json         # Liste des actualités (générée automatiquement)
 │   ├── installations.json # Liste des installations de tennis
 │   └── posts/             # Articles et actualités
 ├── public/                # Fichiers statiques (images, scripts)
