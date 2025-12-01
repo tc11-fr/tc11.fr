@@ -68,63 +68,17 @@ layout: layouts/page.html
   </p>
 
   <h4 class="text-xl font-bold mb-4">Nos installations</h4>
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <a href="https://www.paris.fr/lieux/tennis-alain-mimoun-ex-paul-valery-2965" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/2478c719afb8333a332ccfe42ab11e09.jpg" alt="C.S. Alain Mimoun" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">C.S. Alain Mimoun</h5>
-        <p class="text-sm text-slate-600">Tennis — 4 terrains — Revêtement : béton poreux</p>
-      </div>
-    </a>
-    <a href="https://www.paris.fr/lieux/tennis-candie-19092" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/1d9d1ce394041b7fe2738de8dc7a0a6e.jpg" alt="Candie" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">Candie</h5>
-        <p class="text-sm text-slate-600">Tennis — 3 terrains — Revêtement : gazon synthétique</p>
-      </div>
-    </a>
-    <a href="https://www.paris.fr/lieux/tennis-carnot-3318" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/5e64e9fc7333c218fc9153f16d8865f2.jpg" alt="Carnot" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">Carnot</h5>
-        <p class="text-sm text-slate-600">Tennis — 1 terrain — Revêtement : synthétique</p>
-      </div>
-    </a>
-    <a href="https://www.paris.fr/lieux/tennis-la-faluere-2964" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/1aeddd7bd7f2c30fd3bb1b67dcc5f7a2.jpg" alt="La Faluère" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">La Faluère</h5>
-        <p class="text-sm text-slate-600">Tennis — 1 terrain — Revêtement: Béton poreux</p>
-      </div>
-    </a>
-    <a href="https://www.google.com/maps/place/Centre+de+Comit%C3%A9+de+Tennis+de+Paris-Est+Les+Lilas/@48.8748281,2.4126617,1146m/data=!3m2!1e3!4b1!4m6!3m5!1s0x47e66d9ff724a35d:0x7eadf58726d49b97!8m2!3d48.8748281!4d2.4126617!16s%2Fg%2F11bx89wd5s?hl=fr&entry=ttu&g_ep=EgoyMDI1MDgwNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cmsclub.fft.fr/57/75/0181/0855af8e-7c5d-46c6-845e-37d8f8e93878" alt="Les Lilas" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">Les Lilas</h5>
-        <p class="text-sm text-slate-600">Tennis — 1 terrain — Revêtement : terre battue</p>
-      </div>
-    </a>
-    <a href="https://www.paris.fr/lieux/tennis-philippe-auguste-17244" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/c8cb2000799907c777d76468722abce5.jpg" alt="Philippe Auguste" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">Philippe Auguste</h5>
-        <p class="text-sm text-slate-600">Tennis — 1 terrain — Revêtement: Synthétique</p>
-      </div>
-    </a>
-    <a href="https://www.paris.fr/lieux/tennis-thiere-19075" target="_blank" rel="noopener"
-       class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
-      <img src="https://cdn.paris.fr/eqpts-prod/2022/05/10/0a7e1914b8cde41d63405297f6bac76b.jpg" alt="Thiéré" class="w-full h-40 object-cover">
-      <div class="p-4">
-        <h5 class="font-bold text-tc-orange">Thiéré</h5>
-        <p class="text-sm text-slate-600">Tennis — 1 terrain — Revêtement : béton poreux</p>
-      </div>
-    </a>
+  <div x-data="installationsData()" x-init="fetchInstallations()" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <template x-for="(installation, idx) in installations" :key="idx">
+      <a :href="installation.url" target="_blank" rel="noopener"
+         class="block border rounded-xl overflow-hidden hover:shadow-soft transition">
+        <img :src="installation.image" :alt="installation.name" class="w-full h-40 object-cover">
+        <div class="p-4">
+          <h5 class="font-bold text-tc-orange" x-text="installation.name"></h5>
+          <p class="text-sm text-slate-600" x-text="installation.terrains + ' terrain' + (installation.terrains > 1 ? 's' : '') + ' — Revêtement : ' + installation.surface"></p>
+        </div>
+      </a>
+    </template>
   </div>
 
   <!-- Carte -->
@@ -163,6 +117,18 @@ function actusData() {
       const res = await fetch('/actus.json');
       if (res.ok) {
         this.actus = await res.json();
+      }
+    }
+  }
+}
+
+function installationsData() {
+  return {
+    installations: [],
+    async fetchInstallations() {
+      const res = await fetch('/installations.json');
+      if (res.ok) {
+        this.installations = await res.json();
       }
     }
   }
