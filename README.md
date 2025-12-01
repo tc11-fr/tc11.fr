@@ -49,18 +49,23 @@ Les fichiers générés se trouvent dans le dossier `target/roq/`.
 
 ```
 tc11.fr/
-├── content/           # Contenu du site (pages, actualités)
-│   ├── index.html     # Page d'accueil
-│   ├── actus.json     # Liste des actualités
-│   └── posts/         # Articles et actualités
-├── public/            # Fichiers statiques (images, scripts)
-│   ├── reactions.js   # Système de likes et vues
-│   └── style.css      # Styles CSS
-├── templates/         # Modèles de page
-│   ├── layouts/       # Mises en page
-│   └── partials/      # Composants réutilisables
-├── src/               # Code source Java (si nécessaire)
-└── pom.xml            # Configuration Maven
+├── content/               # Contenu du site (pages, actualités)
+│   ├── index.html         # Page d'accueil
+│   ├── actus.json         # Liste des actualités (générée automatiquement)
+│   ├── installations.json # Liste des installations de tennis
+│   └── posts/             # Articles et actualités
+├── public/                # Fichiers statiques (images, scripts)
+│   ├── assets/            # Images du site
+│   │   └── installations/ # Photos des installations
+│   ├── reactions.js       # Système de likes et vues
+│   └── style.css          # Styles CSS
+├── templates/             # Modèles de page
+│   ├── layouts/           # Mises en page
+│   └── partials/          # Composants réutilisables
+├── src/                   # Code source Java
+│   └── main/resources/    # Configuration et ressources
+│       └── instagram.json # Liste de secours des posts Instagram
+└── pom.xml                # Configuration Maven
 ```
 
 ## ❤️ Système de likes et vues
