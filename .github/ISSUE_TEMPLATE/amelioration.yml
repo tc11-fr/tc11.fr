@@ -1,0 +1,19 @@
+name: Proposer une amélioration
+description: Suggérer une amélioration ou une nouvelle fonctionnalité pour le site TC11
+title: "[Amélioration] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "- Description de l'amélioration"
+      placeholder: "Décrivez l'amélioration que vous souhaitez proposer…"
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "- Pourquoi cette amélioration ?"
+      placeholder: "Expliquez pourquoi cette amélioration serait utile…"
+    validations:
+      required: false
