@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Proposer une amélioration ou remonter un bug
+    url: https://github.com/tc11-fr/tc11.fr/issues/new
+    about: Suggérez une amélioration du site ou signalez un problème technique.
