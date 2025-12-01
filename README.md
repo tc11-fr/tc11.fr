@@ -129,9 +129,14 @@ Les installations sont configurées dans `content/installations.json`. Pour modi
 
 ### 📸 Galerie Instagram
 
-Les posts Instagram sont récupérés automatiquement depuis le compte [@tc11assb](https://www.instagram.com/tc11assb/) via RSS Bridge ou l'API Instagram.
+Les posts Instagram sont récupérés automatiquement depuis le compte [@tc11assb](https://www.instagram.com/tc11assb/) selon cette chaîne de priorité :
 
-En cas d'échec de la récupération automatique, le système utilise la liste de secours dans `src/main/resources/instagram.json` :
+1. **RSS Bridge** (par défaut) : Récupération via service RSS, sans authentification
+2. **API Instagram Graph** : Si des identifiants sont configurés
+3. **Scraping Playwright** : En dernier recours, via navigateur headless
+4. **Liste de secours** : Si tout échoue, utilise `src/main/resources/instagram.json`
+
+Pour mettre à jour la liste de secours, modifiez le fichier `src/main/resources/instagram.json` :
 
 ```json
 [
@@ -140,7 +145,7 @@ En cas d'échec de la récupération automatique, le système utilise la liste d
 ]
 ```
 
-Pour mettre à jour la liste de secours, modifiez ce fichier avec les URLs des posts souhaités.
+Remplacez les URLs par les posts Instagram souhaités (format : `https://www.instagram.com/p/XXXXXX`).
 
 ### 📧 Modifier les informations de contact
 
