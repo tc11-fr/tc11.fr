@@ -108,6 +108,9 @@ jobs:
       - name: Install Surge
         run: npm install -g surge
 
+      - name: Install npm dependencies
+        run: npm install tailwindcss@4
+
       - name: Build Roq site
         env:
           MAVEN_OPTS: -Dmaven.repo.local=$HOME/.m2/repository
