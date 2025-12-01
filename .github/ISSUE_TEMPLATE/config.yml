@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Autre demande
+    url: https://github.com/tc11-fr/tc11.fr/issues/new
+    about: Créez une demande libre si aucun modèle ne correspond à votre besoin.
