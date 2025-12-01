@@ -1,0 +1,26 @@
+name: Remonter un bug
+description: Signaler un problème ou un bug sur le site TC11
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "- Description du problème"
+      placeholder: "Décrivez le bug que vous avez rencontré…"
+    validations:
+      required: true
+  - type: textarea
+    id: etapes
+    attributes:
+      label: "- Étapes pour reproduire"
+      placeholder: "1. Aller sur…\n2. Cliquer sur…\n3. Voir l'erreur"
+    validations:
+      required: false
+  - type: textarea
+    id: attendu
+    attributes:
+      label: "- Comportement attendu"
+      placeholder: "Décrivez ce qui devrait se passer à la place…"
+    validations:
+      required: false
