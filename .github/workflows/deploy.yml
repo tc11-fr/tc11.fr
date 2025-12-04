@@ -41,7 +41,8 @@ jobs:
       
       - name: Create CNAME file for GitHub Pages
         run: |
-          rm -rf target/roq/CNAME
+          mkdir -p target/roq
+          rm -f target/roq/CNAME
           echo "tc11.fr" > target/roq/CNAME
   deploy:
     environment:
