@@ -38,6 +38,12 @@ jobs:
         uses: quarkiverse/quarkus-roq@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}   # Used to automatically get the GitHub Pages url
+      
+      - name: Create CNAME file for GitHub Pages
+        run: |
+          mkdir -p target/roq
+          rm -f target/roq/CNAME
+          echo "tc11.fr" > target/roq/CNAME
   deploy:
     environment:
       name: github-pages
