@@ -26,14 +26,6 @@ jobs:
             libsecret-1-0 libhyphen0 libgles2 gstreamer1.0-libav \
             libavif16 libmanette-0.2-0 libvpx9 libflite1 || true
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      - name: Install npm dependencies
-        run: npm install tailwindcss@4
-      
       - name: Generate Roq Site
         uses: quarkiverse/quarkus-roq@v1
         with:

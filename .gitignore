@@ -44,9 +44,6 @@ node_modules/
 package.json
 package-lock.json
 
-# Generated Tailwind CSS (built at build time)
-public/tailwind.css
-
 # Plugin directory
 /.quarkus/cli/plugins/
 # TLS Certificates
