@@ -7,8 +7,8 @@
 <!-- Palette TC11 (terre battue / balle) -->
 <link rel="stylesheet" href="/style.css" />
 
-<!-- Tailwind CSS (pre-built at build time) -->
-<link rel="stylesheet" href="/tailwind.css" />
+<!-- Tailwind CSS (bundled with Quarkus Web Bundler) -->
+{#bundle key="app" tag="style" /}
 
 <!-- Libs légères pour l’interactivité -->
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

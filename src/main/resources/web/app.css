@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
-@source "../../../templates/**/*.html";
-@source "../../../content/**/*.html";
-@source "../../../content/**/*.md";
+@source "../../templates/**/*.html";
+@source "../../content/**/*.html";
+@source "../../content/**/*.md";
 
 @theme {
   --color-tc-orange: var(--tc-orange);
