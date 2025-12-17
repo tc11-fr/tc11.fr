@@ -77,5 +77,16 @@ Ce site est construit avec des technologies modernes et performantes :
 
 Le site est hébergé gratuitement sur **GitHub Pages**, garantissant rapidité et fiabilité. Le code source est entièrement **open source** et disponible sur [GitHub](https://github.com/tc11-fr/tc11.fr).
 
+## 🚀 Et pour la suite ?
+
+Ce nouveau site n'est que le début ! Voici quelques idées de fonctionnalités que nous envisageons d'ajouter prochainement :
+
+- **📅 Calendrier du club** – Pour savoir quand ont lieu les cours, les événements comme la fête du club, les périodes de réinscriptions, etc.
+- **👥 Section équipe** – Présentation de l'équipe dirigeante et pédagogique avec photos et biographies
+- **💳 Formules d'adhésion** – Détail des différentes formules d'inscription et tarifs
+- **🎯 Événements à venir** – Tournoi interne Dames, stages, compétitions, et autres rendez-vous du club
+- **🏥 Article Tennis Santé** – Focus sur notre label Tennis Santé et ses bienfaits
+
+Les possibilités sont infinies ! N'hésitez pas à partager vos suggestions sur notre [dépôt GitHub](https://github.com/tc11-fr/tc11.fr/issues).
 
 Bonne visite et à très bientôt sur les courts ! 🎾
