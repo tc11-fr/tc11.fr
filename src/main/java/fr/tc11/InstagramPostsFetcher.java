@@ -224,7 +224,10 @@ public class InstagramPostsFetcher {
         for (String post : posts) {
             boolean isBlacklisted = false;
             for (String shortcode : blacklistedShortcodes) {
-                if (post.contains(shortcode)) {
+                // Use pattern matching to ensure we match the exact shortcode in the URL
+                // Instagram URLs are in the format: https://www.instagram.com/p/SHORTCODE or https://www.instagram.com/p/SHORTCODE/
+                if (post.contains("/p/" + shortcode) || post.contains("/reel/" + shortcode) || 
+                    post.endsWith("/" + shortcode) || post.endsWith("/" + shortcode + "/")) {
                     isBlacklisted = true;
                     LOG.debugf("Filtering out blacklisted post: %s (shortcode: %s)", post, shortcode);
                     break;
