@@ -68,6 +68,28 @@ tc11.fr/
 └── pom.xml                # Configuration Maven
 ```
 
+## 📸 Configuration Instagram
+
+Le site affiche automatiquement les derniers posts Instagram du compte [@tc11assb](https://www.instagram.com/tc11assb/). La configuration se trouve dans `src/main/resources/application.properties`.
+
+### Liste noire des posts
+
+Pour masquer certains posts Instagram (par exemple, des annonces obsolètes), ajoutez leurs identifiants à la liste noire :
+
+```properties
+# Liste des posts Instagram à exclure de la galerie
+# Peut contenir des shortcodes ou des URLs complètes, séparés par des virgules
+tc11.instagram.blacklist=DKurQ_ktdgw,https://www.instagram.com/p/ABC123/
+```
+
+**Exemples :**
+- Avec shortcode uniquement : `tc11.instagram.blacklist=DKurQ_ktdgw`
+- Avec URL complète : `tc11.instagram.blacklist=https://www.instagram.com/p/DKurQ_ktdgw`
+- Plusieurs posts : `tc11.instagram.blacklist=DKurQ_ktdgw,ABC123DEF,XYZ789GHI`
+
+Pour trouver le shortcode d'un post, utilisez l'URL du post Instagram :
+`https://www.instagram.com/p/DKurQ_ktdgw/` → le shortcode est `DKurQ_ktdgw`
+
 ## ❤️ Système de likes et vues
 
 Le site dispose d'un système de likes et de compteur de vues pour les articles. Pour un site statique, plusieurs options sont disponibles :
