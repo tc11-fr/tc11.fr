@@ -7,7 +7,7 @@ layout: layouts/post.html
 labelDetails: "En savoir plus →"
 ---
 
-## Save the date ! 🗓️
+## Réservez la date ! 🗓️
 
 Nous sommes ravis de vous annoncer la date de la **Fête du Club 2026** !
 
