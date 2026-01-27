@@ -1,5 +1,5 @@
 ---
-title: "Réservez la date : Fête du Club le 21 juin 2026 ! 🎉"
+title: "Save the date : Fête du Club le 21 juin 2026 ! 🎉"
 description: "Bloquez dès maintenant la date dans vos agendas : la Fête du Club 2026 aura lieu le 21 juin à la Falluère !"
 category: "Club"
 date: "2026-01-27"
@@ -7,7 +7,7 @@ layout: layouts/post.html
 labelDetails: "En savoir plus →"
 ---
 
-## Réservez la date ! 🗓️
+## Save the date ! 🗓️
 
 Nous sommes ravis de vous annoncer la date de la **Fête du Club 2026** !
 
