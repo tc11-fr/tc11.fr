@@ -11,7 +11,7 @@ labelDetails: "En savoir plus →"
 
 Nous sommes ravis de vous annoncer la date de la **Fête du Club 2026** !
 
-📅 **Date : Samedi 21 juin 2026**  
+📅 **Date : Dimanche 21 juin 2026**  
 📍 **Lieu : La Falluère**
 
 ## Bloquez vos agendas ! 
