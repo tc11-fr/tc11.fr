@@ -55,7 +55,7 @@ public class InstagramPostsFetcher {
     private static final Logger LOG = Logger.getLogger(InstagramPostsFetcher.class);
     
     // RSS Bridge URL for fetching Instagram posts without authentication
-    private static final String RSS_BRIDGE_URL = "https://rss-bridge.org/bridge01/?action=display&bridge=InstagramBridge&context=Username&u=%s&media_type=all&direct_links=on&format=Json";
+    private static final String RSS_BRIDGE_URL = "https://rss-bridge.org/bridge01/?action=display&context=Username&u=%s&bridge=InstagramBridge&format=Json";
     
     // Instagram Graph API endpoints
     private static final String GRAPH_API_BASE = "https://graph.facebook.com/v21.0";

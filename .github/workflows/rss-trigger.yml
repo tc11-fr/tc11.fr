@@ -19,7 +19,7 @@ jobs:
         id: rss
         run: |
           set -e
-          URL="https://rss-bridge.org/bridge01/?action=display&bridge=InstagramBridge&context=Username&u=tc11assb&media_type=all&direct_links=on&format=Json"
+          URL="https://rss-bridge.org/bridge01/?action=display&context=Username&u=tc11assb&bridge=InstagramBridge&format=Json"
           JSON=$(curl -sSL --max-time 30 --retry 3 --retry-delay 5 "$URL")
           
           # Extract identifier from first item
