@@ -90,6 +90,10 @@ public class InstagramPostsFetcher {
     // Instagram Business Account ID (required for Graph API)
     @ConfigProperty(name = "tc11.instagram.account-id")
     Optional<String> accountId;
+    
+    // Comma-separated list of Instagram post shortcodes or URLs to exclude from the gallery
+    @ConfigProperty(name = "tc11.instagram.blacklist")
+    Optional<String> blacklist;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient;
@@ -172,10 +176,70 @@ public class InstagramPostsFetcher {
      * Returns the list of Instagram post URLs.
      * This is used by the Qute template extension to expose posts to templates.
      * 
-     * @return unmodifiable list of Instagram post URLs
+     * @return unmodifiable list of Instagram post URLs (with blacklisted posts filtered out)
      */
     public List<String> getInstagramPosts() {
-        return instagramPosts;
+        return filterBlacklistedPosts(instagramPosts);
+    }
+
+    /**
+     * Filters out blacklisted posts from the given list.
+     * Blacklist can contain either shortcodes (e.g., "DKurQ_ktdgw") or full URLs.
+     * 
+     * @param posts the list of Instagram post URLs to filter
+     * @return filtered list with blacklisted posts removed
+     */
+    private List<String> filterBlacklistedPosts(List<String> posts) {
+        if (blacklist.isEmpty() || blacklist.get().isBlank()) {
+            return posts;
+        }
+        
+        // Parse blacklist entries (can be shortcodes or full URLs)
+        String[] blacklistEntries = blacklist.get().split(",");
+        Set<String> blacklistedShortcodes = new LinkedHashSet<>();
+        
+        for (String entry : blacklistEntries) {
+            String trimmed = entry.trim();
+            if (trimmed.isEmpty()) continue;
+            
+            // If it's a full URL, extract the shortcode
+            if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+                // Extract shortcode from URLs like https://www.instagram.com/p/DKurQ_ktdgw or https://www.instagram.com/p/DKurQ_ktdgw/
+                Matcher matcher = POST_LINK_PATTERN.matcher(trimmed);
+                if (matcher.find()) {
+                    blacklistedShortcodes.add(matcher.group(1));
+                }
+            } else {
+                // It's already a shortcode
+                blacklistedShortcodes.add(trimmed);
+            }
+        }
+        
+        if (blacklistedShortcodes.isEmpty()) {
+            return posts;
+        }
+        
+        // Filter out blacklisted posts
+        List<String> filtered = new ArrayList<>();
+        for (String post : posts) {
+            boolean isBlacklisted = false;
+            for (String shortcode : blacklistedShortcodes) {
+                if (post.contains(shortcode)) {
+                    isBlacklisted = true;
+                    LOG.debugf("Filtering out blacklisted post: %s (shortcode: %s)", post, shortcode);
+                    break;
+                }
+            }
+            if (!isBlacklisted) {
+                filtered.add(post);
+            }
+        }
+        
+        if (filtered.size() < posts.size()) {
+            LOG.infof("Filtered %d blacklisted posts, %d posts remaining", posts.size() - filtered.size(), filtered.size());
+        }
+        
+        return Collections.unmodifiableList(filtered);
     }
 
     /**

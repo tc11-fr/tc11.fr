@@ -357,4 +357,20 @@ class InstagramPostsFetcherTest {
         // Should be limited to MAX_POSTS (6)
         assertEquals(6, urls.size());
     }
+    
+    // ========== Blacklist Filtering Tests ==========
+    
+    @Test
+    void testGetInstagramPostsFiltersBlacklistedShortcodes() {
+        // This test verifies that blacklisted shortcodes are filtered out
+        // The actual blacklist is configured in application.properties
+        List<String> posts = fetcher.getInstagramPosts();
+        
+        assertNotNull(posts);
+        // Verify that no post contains the blacklisted shortcode from config (DKurQ_ktdgw)
+        for (String post : posts) {
+            assertFalse(post.contains("DKurQ_ktdgw"), 
+                "Post should not contain blacklisted shortcode DKurQ_ktdgw: " + post);
+        }
+    }
 }
