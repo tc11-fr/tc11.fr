@@ -224,10 +224,7 @@ public class InstagramPostsFetcher {
         for (String post : posts) {
             boolean isBlacklisted = false;
             for (String shortcode : blacklistedShortcodes) {
-                // Use pattern matching to ensure we match the exact shortcode in the URL
-                // Instagram URLs are in the format: https://www.instagram.com/p/SHORTCODE or https://www.instagram.com/p/SHORTCODE/
-                if (post.contains("/p/" + shortcode) || post.contains("/reel/" + shortcode) || 
-                    post.endsWith("/" + shortcode) || post.endsWith("/" + shortcode + "/")) {
+                if (isPostBlacklisted(post, shortcode)) {
                     isBlacklisted = true;
                     LOG.debugf("Filtering out blacklisted post: %s (shortcode: %s)", post, shortcode);
                     break;
@@ -243,6 +240,23 @@ public class InstagramPostsFetcher {
         }
         
         return Collections.unmodifiableList(filtered);
+    }
+    
+    /**
+     * Checks if a post URL matches a blacklisted shortcode.
+     * Uses precise matching with URL delimiters to avoid false positives.
+     * 
+     * @param postUrl the Instagram post URL to check
+     * @param shortcode the blacklisted shortcode to match against
+     * @return true if the post should be blacklisted
+     */
+    private boolean isPostBlacklisted(String postUrl, String shortcode) {
+        // Instagram URLs are in the format: https://www.instagram.com/p/SHORTCODE or https://www.instagram.com/p/SHORTCODE/
+        // Match with proper delimiters to avoid false positives
+        return postUrl.contains("/p/" + shortcode) || 
+               postUrl.contains("/reel/" + shortcode) || 
+               postUrl.endsWith("/" + shortcode) || 
+               postUrl.endsWith("/" + shortcode + "/");
     }
 
     /**
