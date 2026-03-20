@@ -23,7 +23,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -67,12 +71,15 @@ public class InstagramPostsFetcher {
     // Pattern to find post shortcodes in the page
     private static final Pattern POST_LINK_PATTERN = Pattern.compile("/p/([A-Za-z0-9_-]+)");
     private static final Pattern REEL_LINK_PATTERN = Pattern.compile("/reel/([A-Za-z0-9_-]+)");
+    private static final Pattern SHORTCODE_JSON_PATTERN = Pattern.compile("\\\"shortcode\\\":\\\"([A-Za-z0-9_-]+)\\\"");
     
     private static final int MAX_POSTS = 6;
     private static final int CONNECT_TIMEOUT_SECONDS = 10;
     private static final int REQUEST_TIMEOUT_SECONDS = 30;
     private static final int BROWSER_TIMEOUT_MS = 30000;
     private static final int BROWSER_CONTENT_LOAD_WAIT_MS = 2000;
+    private static final int BROWSER_FETCH_ATTEMPTS = 2;
+    private static final DateTimeFormatter DEBUG_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
     
     // Classpath resource path for fallback instagram.json
     private static final String FALLBACK_RESOURCE_PATH = "/instagram.json";
@@ -94,6 +101,12 @@ public class InstagramPostsFetcher {
     // Comma-separated list of Instagram post shortcodes or URLs to exclude from the gallery
     @ConfigProperty(name = "tc11.instagram.blacklist")
     Optional<String> blacklist;
+
+    @ConfigProperty(name = "tc11.instagram.debug.enabled", defaultValue = "false")
+    boolean debugEnabled;
+
+    @ConfigProperty(name = "tc11.instagram.debug.output-dir", defaultValue = "target/instagram-debug")
+    String debugOutputDir;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient;
@@ -389,44 +402,129 @@ public class InstagramPostsFetcher {
                 context.addInitScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
 
                 Page page = context.newPage();
-                
+
                 String profileUrl = String.format(INSTAGRAM_PROFILE_URL, instagramUsername);
-                LOG.debugf("Navigating to %s", profileUrl);
-                
-                // Use DOMCONTENTLOADED — NETWORKIDLE often hangs on Instagram's heavy SPA
-                page.navigate(profileUrl, new Page.NavigateOptions()
-                        .setTimeout(BROWSER_TIMEOUT_MS)
-                        .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+                String profileUrlWithLang = profileUrl + "?hl=en";
 
-                // Wait for at least one post or reel link to appear in the DOM
-                try {
-                    page.waitForSelector("a[href*='/p/'], a[href*='/reel/']",
-                            new Page.WaitForSelectorOptions().setTimeout(BROWSER_TIMEOUT_MS));
-                } catch (Exception e) {
-                    LOG.warnf("Post link selector timed out, proceeding with current page state");
-                }
+                for (int attempt = 1; attempt <= BROWSER_FETCH_ATTEMPTS; attempt++) {
+                    String targetUrl = attempt == 1 ? profileUrl : profileUrlWithLang;
+                    LOG.debugf("Navigating to %s (attempt %d/%d)", targetUrl, attempt, BROWSER_FETCH_ATTEMPTS);
 
-                // Small extra wait for lazy-loaded grid images
-                page.waitForTimeout(BROWSER_CONTENT_LOAD_WAIT_MS);
+                    page.navigate(targetUrl, new Page.NavigateOptions()
+                            .setTimeout(BROWSER_TIMEOUT_MS)
+                            .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
-                // Extract hrefs directly from the live DOM — more reliable than regex on raw HTML
-                Object result = page.evaluate(
-                    "() => Array.from(document.querySelectorAll('a[href]'))" +
-                    ".map(a => a.getAttribute('href'))" +
-                    ".filter(h => h && (h.includes('/p/') || h.includes('/reel/')))");
+                    try {
+                        page.waitForSelector("a[href*='/p/'], a[href*='/reel/']",
+                                new Page.WaitForSelectorOptions().setTimeout(BROWSER_TIMEOUT_MS));
+                    } catch (Exception e) {
+                        LOG.warnf("Post link selector timed out on attempt %d/%d", attempt, BROWSER_FETCH_ATTEMPTS);
+                    }
 
-                List<String> hrefs = new ArrayList<>();
-                if (result instanceof List<?> list) {
-                    for (Object item : list) {
-                        if (item instanceof String s) hrefs.add(s);
+                    page.waitForTimeout(BROWSER_CONTENT_LOAD_WAIT_MS);
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)");
+                    page.waitForTimeout(BROWSER_CONTENT_LOAD_WAIT_MS);
+
+                    writeDebugArtifacts(page, attempt);
+
+                    List<String> postUrls = extractPostUrlsFromPage(page);
+                    if (!postUrls.isEmpty()) {
+                        return postUrls;
                     }
                 }
 
-                return extractPostUrlsFromLinks(hrefs);
+                return List.of();
             }
         } catch (Exception e) {
             LOG.warnf("Headless browser error: %s", e.getMessage());
             throw new RuntimeException("Failed to scrape Instagram via headless browser", e);
+        }
+    }
+
+    private List<String> extractPostUrlsFromPage(Page page) {
+        Object result = page.evaluate(
+                "() => Array.from(document.querySelectorAll('a[href]'))" +
+                        ".map(a => a.getAttribute('href'))" +
+                        ".filter(h => h && (h.includes('/p/') || h.includes('/reel/')))"
+        );
+
+        List<String> hrefs = new ArrayList<>();
+        if (result instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof String s) {
+                    hrefs.add(s);
+                }
+            }
+        }
+
+        List<String> fromDom = extractPostUrlsFromLinks(hrefs);
+        if (!fromDom.isEmpty()) {
+            return fromDom;
+        }
+
+        try {
+            String html = page.content();
+            List<String> fromHtml = extractPostUrlsFromHtml(html);
+            if (debugEnabled) {
+                LOG.infof("Instagram debug parse counts - DOM: %d, HTML: %d", fromDom.size(), fromHtml.size());
+            }
+            return fromHtml;
+        } catch (Exception e) {
+            LOG.debugf("Failed to read page content for HTML fallback: %s", e.getMessage());
+            return List.of();
+        }
+    }
+
+    private void writeDebugArtifacts(Page page, int attempt) {
+        if (!debugEnabled) {
+            return;
+        }
+        try {
+            Path baseDir = Path.of(debugOutputDir,
+                    LocalDateTime.now().format(DEBUG_TIMESTAMP_FORMATTER) + "-attempt-" + attempt);
+            Files.createDirectories(baseDir);
+
+            Path screenshotPath = baseDir.resolve("page.png");
+            page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath).setFullPage(true));
+
+            String html = page.content();
+            Files.writeString(baseDir.resolve("page.html"), html, StandardCharsets.UTF_8);
+
+            Object result = page.evaluate(
+                    "() => Array.from(document.querySelectorAll('a[href]'))" +
+                            ".map(a => a.getAttribute('href'))" +
+                            ".filter(h => h && (h.includes('/p/') || h.includes('/reel/')))"
+            );
+
+            List<String> hrefs = new ArrayList<>();
+            if (result instanceof List<?> list) {
+                for (Object item : list) {
+                    if (item instanceof String s) {
+                        hrefs.add(s);
+                    }
+                }
+            }
+
+            List<String> domParsed = extractPostUrlsFromLinks(hrefs);
+            List<String> htmlParsed = extractPostUrlsFromHtml(html);
+
+            List<String> report = new ArrayList<>();
+            report.add("url=" + page.url());
+            report.add("title=" + page.title());
+            report.add("dom_href_count=" + hrefs.size());
+            report.add("dom_parsed_count=" + domParsed.size());
+            report.add("html_parsed_count=" + htmlParsed.size());
+            report.add("dom_hrefs=");
+            report.addAll(hrefs);
+            report.add("dom_parsed_urls=");
+            report.addAll(domParsed);
+            report.add("html_parsed_urls=");
+            report.addAll(htmlParsed);
+
+            Files.write(baseDir.resolve("analysis.txt"), report, StandardCharsets.UTF_8);
+            LOG.infof("Instagram debug artifacts written to %s", baseDir);
+        } catch (Exception e) {
+            LOG.warnf("Failed to write Instagram debug artifacts: %s", e.getMessage());
         }
     }
 
@@ -480,6 +578,15 @@ public class InstagramPostsFetcher {
         while (reelMatcher.find()) {
             String shortcode = reelMatcher.group(1);
             if (shortcode.length() >= 10 && shortcode.length() <= 12) {
+                shortcodes.add(shortcode);
+            }
+        }
+
+        // Extract from JSON payloads embedded in script tags (fallback when links are not in anchors)
+        Matcher jsonMatcher = SHORTCODE_JSON_PATTERN.matcher(html);
+        while (jsonMatcher.find()) {
+            String shortcode = jsonMatcher.group(1);
+            if (shortcode.length() >= 8 && shortcode.length() <= 20) {
                 shortcodes.add(shortcode);
             }
         }
