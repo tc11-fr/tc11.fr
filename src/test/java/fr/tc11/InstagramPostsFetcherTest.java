@@ -268,6 +268,41 @@ class InstagramPostsFetcherTest {
         assertEquals(6, urls.size());
     }
 
+    @Test
+    void testExtractPostUrlsFromLinksWithLiveDebugAttempt20260320() {
+        List<String> hrefs = List.of(
+            "/tc11assb/p/DV6YmiTDBvC/?hl=en",
+            "/tc11assb/p/DMc_B-kNmxf/?hl=en",
+            "/tc11assb/p/DK5HR3bgmSY/?hl=en",
+            "/tc11assb/p/DKurQ_ktdgw/?hl=en",
+            "/tc11assb/p/DKhw5Octojb/?hl=en",
+            "/tc11assb/p/DKfVeXmAyfl/?hl=en",
+            "/tc11assb/p/DKPAHp0tpGX/?hl=en",
+            "/tc11assb/p/DJ4w5KfABvX/?hl=en",
+            "/tc11assb/p/DJYxxmZthjE/?hl=en",
+            "/tc11assb/p/DJRmcjTNX0K/?hl=en",
+            "/tc11assb/p/DI9frxUgRBC/?hl=en",
+            "/tc11assb/p/DI6zb2MNn6b/?hl=en",
+            "/tc11assb/p/DITWhAWgBG5/?hl=en",
+            "/tc11assb/p/DIEuPj3tQGL/?hl=en",
+            "/tc11assb/p/DH25PrAgAaW/?hl=en",
+            "/tc11assb/p/DHSsk2OtLGc/?hl=en",
+            "/tc11assb/p/DDzG0Y6AFG6/?hl=en",
+            "/tc11assb/p/DDwwlDAAZmk/?hl=en"
+        );
+
+        List<String> urls = fetcher.testExtractPostUrlsFromLinks(hrefs);
+
+        assertNotNull(urls);
+        assertEquals(6, urls.size());
+        assertEquals("https://www.instagram.com/p/DV6YmiTDBvC", urls.get(0));
+        assertEquals("https://www.instagram.com/p/DMc_B-kNmxf", urls.get(1));
+        assertEquals("https://www.instagram.com/p/DK5HR3bgmSY", urls.get(2));
+        assertEquals("https://www.instagram.com/p/DKurQ_ktdgw", urls.get(3));
+        assertEquals("https://www.instagram.com/p/DKhw5Octojb", urls.get(4));
+        assertEquals("https://www.instagram.com/p/DKfVeXmAyfl", urls.get(5));
+    }
+
     // ========== RSS Bridge Response Parsing Tests ==========
 
     @Test
