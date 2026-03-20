@@ -38,6 +38,8 @@ jobs:
 
       - name: Generate Roq Site
         uses: quarkiverse/quarkus-roq@v1
+        env:
+          QUARKUS_ROQ_GENERATOR_TIMEOUT: "60"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}   # Used to automatically get the GitHub Pages url
       

@@ -121,6 +121,7 @@ jobs:
       - name: Build Roq site
         env:
           MAVEN_OPTS: -Dmaven.repo.local=$HOME/.m2/repository
+          QUARKUS_ROQ_GENERATOR_TIMEOUT: "60"
         run: QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B -q package quarkus:run
 
       - name: Deploy to Surge
