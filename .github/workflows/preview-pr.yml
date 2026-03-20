@@ -89,6 +89,15 @@ jobs:
             libavif16 libmanette-0.2-0 libvpx9 libflite1 \
             libwayland-server0 || true
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.49.0
+
+      - name: Install Playwright Chromium
+        run: npx -y playwright@1.49.0 install chromium
+
       - name: Prime Maven cache (go-offline)
         run: ./mvnw -B -q -DskipTests dependency:go-offline
 
