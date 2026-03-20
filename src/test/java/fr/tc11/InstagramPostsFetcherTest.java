@@ -2,6 +2,7 @@ package fr.tc11;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,6 +25,22 @@ class InstagramPostsFetcherTest {
         // The fetcher should always return a non-null list
         List<String> posts = fetcher.getInstagramPosts();
         assertNotNull(posts);
+        assertFalse(posts.isEmpty(), "Expected at least one Instagram post URL");
+        assertTrue(posts.stream().allMatch(url -> url.startsWith("https://www.instagram.com/p/")
+                || url.startsWith("https://www.instagram.com/reel/")),
+            "All posts should be valid Instagram post or reel URLs");
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "tc11.test.playwright.live", matches = "true")
+    void testFetchInstagramPostsViaHeadlessBrowserLive() {
+        List<String> posts = fetcher.fetchInstagramPostsViaHeadlessBrowser();
+        System.out.println("PLAYWRIGHT_SMOKE_POSTS=" + String.join(",", posts));
+
+        assertNotNull(posts);
+        assertFalse(posts.isEmpty(), "Expected at least one Instagram post from Playwright fetch");
+        assertTrue(posts.stream().allMatch(url -> url.startsWith("https://www.instagram.com/p/")),
+                "Playwright fetch should return normalized /p/ Instagram URLs");
     }
 
     // ========== Graph API Response Parsing Tests ==========

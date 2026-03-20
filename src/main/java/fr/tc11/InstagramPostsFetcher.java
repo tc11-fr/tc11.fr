@@ -40,9 +40,9 @@ import java.util.regex.Pattern;
  * to Qute templates, allowing instagram.json to be generated dynamically.
  * 
  * Uses the following fallback chain:
- * 1. RSS Bridge (no authentication required, simple HTTP request)
+ * 1. Headless browser scraping via Playwright
  * 2. Instagram Graph API (if credentials configured)
- * 3. Headless browser scraping via Playwright (if no API credentials)
+ * 3. RSS Bridge (no authentication required, simple HTTP request)
  * 4. Existing instagram.json file from classpath (if all else fails)
  * 
  * @see <a href="https://rss-bridge.org/">RSS Bridge</a>
@@ -120,17 +120,17 @@ public class InstagramPostsFetcher {
         List<String> fallbackPosts = readFallbackPosts();
         List<String> fetchedUrls = null;
         
-        // Try RSS Bridge first (no authentication required)
-        LOG.info("Fetching Instagram posts via RSS Bridge...");
+        // Try headless browser scraping first (default strategy)
+        LOG.info("Fetching Instagram posts via headless browser...");
         try {
-            fetchedUrls = fetchInstagramPostsViaRssBridge();
+            fetchedUrls = fetchInstagramPostsViaHeadlessBrowser();
             if (!fetchedUrls.isEmpty()) {
                 instagramPosts = Collections.unmodifiableList(new ArrayList<>(fetchedUrls));
-                LOG.infof("Successfully fetched %d Instagram posts via RSS Bridge", fetchedUrls.size());
+                LOG.infof("Successfully fetched %d Instagram posts via headless browser", fetchedUrls.size());
                 return;
             }
         } catch (Exception e) {
-            LOG.warnf("RSS Bridge failed: %s. Trying other methods...", e.getMessage());
+            LOG.warnf("Headless browser scraping failed: %s. Trying other methods...", e.getMessage());
         }
         
         // Try Graph API if credentials are configured
@@ -144,22 +144,23 @@ public class InstagramPostsFetcher {
                     return;
                 }
             } catch (Exception e) {
-                LOG.warnf("Graph API failed: %s. Trying headless browser...", e.getMessage());
+                LOG.warnf("Graph API failed: %s. Trying RSS Bridge...", e.getMessage());
             }
         } else {
-            LOG.info("Graph API credentials not configured. Trying headless browser scraping...");
+            LOG.info("Graph API credentials not configured. Trying RSS Bridge...");
         }
         
-        // Fallback to headless browser scraping
+        // Fallback to RSS Bridge
+        LOG.info("Fetching Instagram posts via RSS Bridge...");
         try {
-            fetchedUrls = fetchInstagramPostsViaHeadlessBrowser();
+            fetchedUrls = fetchInstagramPostsViaRssBridge();
             if (!fetchedUrls.isEmpty()) {
                 instagramPosts = Collections.unmodifiableList(new ArrayList<>(fetchedUrls));
-                LOG.infof("Successfully fetched %d Instagram posts via headless browser", fetchedUrls.size());
+                LOG.infof("Successfully fetched %d Instagram posts via RSS Bridge", fetchedUrls.size());
                 return;
             }
         } catch (Exception e) {
-            LOG.warnf("Headless browser scraping failed: %s", e.getMessage());
+            LOG.warnf("RSS Bridge failed: %s", e.getMessage());
         }
         
         // Final fallback to existing instagram.json from classpath
@@ -360,8 +361,8 @@ public class InstagramPostsFetcher {
 
     /**
      * Fetches Instagram posts using a headless browser (Playwright).
-     * This method loads the Instagram profile page and extracts post links
-     * after JavaScript has rendered the content.
+     * Navigates to the public Instagram profile page anonymously and extracts
+     * post links from the rendered DOM via JavaScript.
      */
     List<String> fetchInstagramPostsViaHeadlessBrowser() {
         LOG.infof("Starting headless browser to scrape @%s", instagramUsername);
@@ -369,34 +370,93 @@ public class InstagramPostsFetcher {
         try (Playwright playwright = Playwright.create()) {
             BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
                     .setHeadless(true)
-                    .setTimeout(BROWSER_TIMEOUT_MS);
+                    .setTimeout(BROWSER_TIMEOUT_MS)
+                    .setArgs(List.of(
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-blink-features=AutomationControlled",
+                        "--disable-dev-shm-usage"
+                    ));
             
             try (Browser browser = playwright.chromium().launch(launchOptions)) {
                 BrowserContext context = browser.newContext(new Browser.NewContextOptions()
-                        .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"));
-                
+                        .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+                        .setViewportSize(1280, 900)
+                        .setLocale("fr-FR")
+                        .setTimezoneId("Europe/Paris"));
+
+                // Hide the webdriver flag that headless browsers expose
+                context.addInitScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })");
+
                 Page page = context.newPage();
                 
                 String profileUrl = String.format(INSTAGRAM_PROFILE_URL, instagramUsername);
                 LOG.debugf("Navigating to %s", profileUrl);
                 
-                // Navigate to the profile page and wait for network to be idle
+                // Use DOMCONTENTLOADED — NETWORKIDLE often hangs on Instagram's heavy SPA
                 page.navigate(profileUrl, new Page.NavigateOptions()
                         .setTimeout(BROWSER_TIMEOUT_MS)
-                        .setWaitUntil(WaitUntilState.NETWORKIDLE));
-                
-                // Wait a bit more for dynamic content to load
+                        .setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+
+                // Wait for at least one post or reel link to appear in the DOM
+                try {
+                    page.waitForSelector("a[href*='/p/'], a[href*='/reel/']",
+                            new Page.WaitForSelectorOptions().setTimeout(BROWSER_TIMEOUT_MS));
+                } catch (Exception e) {
+                    LOG.warnf("Post link selector timed out, proceeding with current page state");
+                }
+
+                // Small extra wait for lazy-loaded grid images
                 page.waitForTimeout(BROWSER_CONTENT_LOAD_WAIT_MS);
-                
-                // Get the page content after JavaScript has executed
-                String content = page.content();
-                
-                return extractPostUrlsFromHtml(content);
+
+                // Extract hrefs directly from the live DOM — more reliable than regex on raw HTML
+                Object result = page.evaluate(
+                    "() => Array.from(document.querySelectorAll('a[href]'))" +
+                    ".map(a => a.getAttribute('href'))" +
+                    ".filter(h => h && (h.includes('/p/') || h.includes('/reel/')))");
+
+                List<String> hrefs = new ArrayList<>();
+                if (result instanceof List<?> list) {
+                    for (Object item : list) {
+                        if (item instanceof String s) hrefs.add(s);
+                    }
+                }
+
+                return extractPostUrlsFromLinks(hrefs);
             }
         } catch (Exception e) {
             LOG.warnf("Headless browser error: %s", e.getMessage());
             throw new RuntimeException("Failed to scrape Instagram via headless browser", e);
         }
+    }
+
+    /**
+     * Extracts unique Instagram post URLs from a list of href attribute values.
+     * Accepts both /p/ and /reel/ paths and normalises everything to /p/ for embed compatibility.
+     */
+    List<String> extractPostUrlsFromLinks(List<String> hrefs) {
+        Set<String> shortcodes = new LinkedHashSet<>();
+
+        for (String href : hrefs) {
+            Matcher postMatcher = POST_LINK_PATTERN.matcher(href);
+            if (postMatcher.find()) {
+                shortcodes.add(postMatcher.group(1));
+                continue;
+            }
+            Matcher reelMatcher = REEL_LINK_PATTERN.matcher(href);
+            if (reelMatcher.find()) {
+                shortcodes.add(reelMatcher.group(1));
+            }
+        }
+
+        List<String> postUrls = new ArrayList<>();
+        for (String shortcode : shortcodes) {
+            if (postUrls.size() >= MAX_POSTS) break;
+            postUrls.add("https://www.instagram.com/p/" + shortcode);
+        }
+
+        LOG.debugf("Extracted %d posts from DOM links", postUrls.size());
+        return postUrls;
     }
 
     /**
@@ -508,6 +568,13 @@ public class InstagramPostsFetcher {
      */
     List<String> testExtractPostUrlsFromHtml(String html) {
         return extractPostUrlsFromHtml(html);
+    }
+
+    /**
+     * For testing: extract post URLs from a list of href values.
+     */
+    List<String> testExtractPostUrlsFromLinks(List<String> hrefs) {
+        return extractPostUrlsFromLinks(hrefs);
     }
     
     /**

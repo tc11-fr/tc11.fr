@@ -1,4 +1,4 @@
-name: RSS Feed Trigger
+name: Instagram Posts Trigger
 
 on:
   schedule:
@@ -10,66 +10,80 @@ permissions:
   actions: write
 
 jobs:
-  check-rss:
+  check-instagram:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch and check RSS feed
-        id: rss
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Fetch posts via Java smoke test and detect changes
+        id: instagram
         run: |
-          set -e
-          URL="https://rss-bridge.org/bridge01/?action=display&context=Username&u=tc11assb&bridge=InstagramBridge&format=Json"
-          JSON=$(curl -sSL --max-time 30 --retry 3 --retry-delay 5 "$URL")
-          
-          # Extract identifier from first item
-          IDENTIFIER=$(echo "$JSON" | python3 -c "
-          import sys, json
-          try:
-              data = json.load(sys.stdin)
-          except json.JSONDecodeError:
-              print('')
-              sys.exit(0)
-          items = data.get('items', [])
-          if not items:
-              print('')
-              sys.exit(0)
-          first = items[0]
-          for key in ('uri', 'link', 'permalink', 'id', 'title'):
-              if key in first and first[key]:
-                  print(first[key])
-                  sys.exit(0)
-          print(json.dumps(first))
-          ")
-          
+          set -euo pipefail
+
+          ./mvnw -B -Dtest=InstagramPostsFetcherTest#testFetchInstagramPostsViaHeadlessBrowserLive \
+            -Dtc11.test.playwright.live=true \
+            -Dtc11.instagram.enabled=true \
+            test | tee /tmp/instagram-smoke.log
+
+          SMOKE_LINE=$(grep -E 'PLAYWRIGHT_SMOKE_POSTS=' /tmp/instagram-smoke.log | tail -n 1 || true)
+          if [ -z "$SMOKE_LINE" ]; then
+            echo "Smoke test output missing PLAYWRIGHT_SMOKE_POSTS"
+            exit 1
+          fi
+
+          POSTS_CSV=${SMOKE_LINE#*PLAYWRIGHT_SMOKE_POSTS=}
+          printf '%s' "$POSTS_CSV" | tr ',' '\n' > .github/instagram-current-posts.txt
+
+          if [ ! -s .github/instagram-current-posts.txt ]; then
+            echo "No Instagram posts fetched via Java smoke test"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          IDENTIFIER=$(head -n 1 .github/instagram-current-posts.txt)
           echo "identifier=$IDENTIFIER" >> "$GITHUB_OUTPUT"
-          
+
           # Check if file exists and compare
-          LAST_FILE=".github/rss-last.txt"
+          LAST_FILE=".github/instagram-last.txt"
+          LEGACY_LAST_FILE=".github/rss-last.txt"
+          POSTS_FILE=".github/instagram-last-posts.txt"
+
+          if [ ! -f "$LAST_FILE" ] && [ -f "$LEGACY_LAST_FILE" ]; then
+            cp "$LEGACY_LAST_FILE" "$LAST_FILE"
+          fi
+
           if [ -f "$LAST_FILE" ]; then
             LAST=$(cat "$LAST_FILE")
           else
             LAST=""
           fi
-          
+
           if [ "$IDENTIFIER" != "$LAST" ] && [ -n "$IDENTIFIER" ]; then
             echo "$IDENTIFIER" > "$LAST_FILE"
+            cp .github/instagram-current-posts.txt "$POSTS_FILE"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Commit and push if changed
-        if: steps.rss.outputs.changed == 'true'
+        if: steps.instagram.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/rss-last.txt
-          git commit -m "chore(ci): update rss last-seen: ${{ steps.rss.outputs.identifier }}"
+          git add .github/instagram-last.txt .github/instagram-last-posts.txt
+          git commit -m "chore(ci): update instagram last-seen: ${{ steps.instagram.outputs.identifier }}"
           git push
 
       - name: Trigger deploy workflow
-        if: steps.rss.outputs.changed == 'true'
+        if: steps.instagram.outputs.changed == 'true'
         run: gh workflow run deploy.yml
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

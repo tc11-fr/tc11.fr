@@ -65,10 +65,30 @@ Installations are configured in `content/installations.json`. To modify, add, or
 
 Instagram posts are fetched automatically from the [@tc11assb](https://www.instagram.com/tc11assb/) account using this priority chain:
 
-1. **RSS Bridge** (default): Fetching via RSS service, no authentication required
+1. **Playwright Scraping** (default): Headless browser fetch from Instagram profile page
 2. **Instagram Graph API**: If credentials are configured
-3. **Playwright Scraping**: As a last resort, via headless browser
+3. **RSS Bridge**: Fallback if Playwright and Graph API fail
 4. **Fallback list**: If all else fails, uses `src/main/resources/instagram.json`
+
+#### ✅ Running the Playwright smoke test
+
+Use this test to verify that the live Playwright fetcher still works against Instagram:
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+./mvnw -Dtest=InstagramPostsFetcherTest#testFetchInstagramPostsViaHeadlessBrowserLive -Dtc11.test.playwright.live=true -Dtc11.instagram.enabled=true test
+```
+
+The test prints fetched URLs in one line, prefixed with `PLAYWRIGHT_SMOKE_POSTS=`.
+
+Example output (run on 2026-03-20):
+
+```text
+PLAYWRIGHT_SMOKE_POSTS=https://www.instagram.com/p/DV6YmiTDBvC,https://www.instagram.com/p/DMc_B-kNmxf,https://www.instagram.com/p/DK5HR3bgmSY,https://www.instagram.com/p/DKurQ_ktdgw,https://www.instagram.com/p/DKhw5Octojb,https://www.instagram.com/p/DKfVeXmAyfl
+```
+
+> ℹ️ This smoke test validates live scraping only (before blacklist filtering).
 
 To update the fallback list, edit the `src/main/resources/instagram.json` file:
 
