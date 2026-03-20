@@ -70,25 +70,27 @@ Instagram posts are fetched automatically from the [@tc11assb](https://www.insta
 3. **RSS Bridge**: Fallback if Playwright and Graph API fail
 4. **Fallback list**: If all else fails, uses `src/main/resources/instagram.json`
 
-#### ✅ Running the Playwright smoke test
+In CI, the daily `rss-trigger.yml` workflow refreshes `src/main/resources/instagram.json` using the live Playwright smoke test and commits the updated fallback file. The deploy and preview workflows then build the site with `tc11.instagram.enabled=false` so generation stays deterministic and does not depend on Instagram network access.
 
-Use this test to verify that the live Playwright fetcher still works against Instagram:
+#### ✅ Refreshing the fallback list with Playwright
+
+Use this Java test to fetch the latest posts from Instagram and rewrite the fallback file used by CI builds:
 
 ```bash
 export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
-./mvnw -Dtest=InstagramPostsFetcherTest#testFetchInstagramPostsViaHeadlessBrowserLive -Dtc11.test.playwright.live=true -Dtc11.instagram.enabled=true test
+./mvnw -Dtest=InstagramFallbackRefreshTest#refreshFallbackFromPlaywrightLive -Dtc11.test.instagram.refresh=true -Dtc11.instagram.enabled=true -Dtc11.instagram.output-file=src/main/resources/instagram.json test
 ```
 
-The test prints fetched URLs in one line, prefixed with `PLAYWRIGHT_SMOKE_POSTS=`.
+The test rewrites `src/main/resources/instagram.json` and prints the first fetched URL prefixed with `INSTAGRAM_FALLBACK_PRIMARY=`.
 
 Example output (run on 2026-03-20):
 
 ```text
-PLAYWRIGHT_SMOKE_POSTS=https://www.instagram.com/p/DV6YmiTDBvC,https://www.instagram.com/p/DMc_B-kNmxf,https://www.instagram.com/p/DK5HR3bgmSY,https://www.instagram.com/p/DKurQ_ktdgw,https://www.instagram.com/p/DKhw5Octojb,https://www.instagram.com/p/DKfVeXmAyfl
+INSTAGRAM_FALLBACK_PRIMARY=https://www.instagram.com/p/DV6YmiTDBvC
 ```
 
-> ℹ️ This smoke test validates live scraping only (before blacklist filtering).
+> ℹ️ This refresh test uses the live Playwright fetcher and rewrites the fallback JSON before blacklist filtering.
 
 To update the fallback list, edit the `src/main/resources/instagram.json` file:
 

@@ -72,6 +72,8 @@ tc11.fr/
 
 Le site affiche automatiquement les derniers posts Instagram du compte [@tc11assb](https://www.instagram.com/tc11assb/). La configuration se trouve dans `src/main/resources/application.properties`.
 
+En CI, le workflow `.github/workflows/rss-trigger.yml` met a jour `src/main/resources/instagram.json` via un test Java dedie base sur Playwright puis commit ce fichier de secours. Les workflows de deploiement et de preview utilisent ensuite ce fallback avec `tc11.instagram.enabled=false` afin d'eviter que la generation Roq depende d'un fetch reseau Instagram au moment du build.
+
 ### Liste noire des posts
 
 Pour masquer certains posts Instagram (par exemple, des annonces obsolètes), ajoutez leurs identifiants à la liste noire :
