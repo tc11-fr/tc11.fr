@@ -26,7 +26,16 @@ jobs:
             libsecret-1-0 libhyphen0 libgles2 gstreamer1.0-libav \
             libavif16 libmanette-0.2-0 libvpx9 libflite1 \
             libwayland-server0 || true
-      
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.49.0
+
+      - name: Install Playwright Chromium
+        run: npx -y playwright@1.49.0 install chromium
+
       - name: Generate Roq Site
         uses: quarkiverse/quarkus-roq@v1
         with:
