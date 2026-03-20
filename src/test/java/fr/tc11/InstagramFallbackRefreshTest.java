@@ -11,13 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @QuarkusTest
 class InstagramFallbackRefreshTest {
 
     private static final String DEFAULT_OUTPUT_FILE = "src/main/resources/instagram.json";
+    private static final int MAX_ATTEMPTS = 10;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Inject
@@ -29,10 +29,19 @@ class InstagramFallbackRefreshTest {
         Path outputPath = Path.of(System.getProperty("tc11.instagram.output-file", DEFAULT_OUTPUT_FILE));
         Files.createDirectories(outputPath.getParent());
 
-        List<String> livePosts = fetcher.fetchInstagramPostsViaHeadlessBrowser();
+        List<String> livePosts = null;
+        for (int attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+            System.out.println("INSTAGRAM_REFRESH_ATTEMPT=" + attempt);
+            livePosts = fetcher.fetchInstagramPostsViaHeadlessBrowser();
+            if (livePosts != null && !livePosts.isEmpty()) {
+                break;
+            }
+            System.out.println("INSTAGRAM_REFRESH_ATTEMPT_FAILED=" + attempt);
+        }
 
-        assertNotNull(livePosts);
-        assertFalse(livePosts.isEmpty(), "Expected at least one Instagram post from Playwright fetch");
+        if (livePosts == null || livePosts.isEmpty()) {
+            fail("Expected at least one Instagram post from Playwright fetch after " + MAX_ATTEMPTS + " attempts");
+        }
 
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(livePosts) + "\n";
         Files.writeString(outputPath, json);
