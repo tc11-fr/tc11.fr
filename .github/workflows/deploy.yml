@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TC11_INSTAGRAM_ENABLED: "false"
     steps:
       - uses: actions/checkout@v4
       
@@ -16,13 +18,22 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          cache: maven
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-1.49.0
+
+      - name: Install Playwright browser and system dependencies
+        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps chromium"
 
       - name: Generate Roq Site
         uses: quarkiverse/quarkus-roq@v1
-        env:
-          TC11_INSTAGRAM_ENABLED: "false"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}   # Used to automatically get the GitHub Pages url
+          setup-java: 'false'
       
       - name: Create CNAME file for GitHub Pages
         run: |
