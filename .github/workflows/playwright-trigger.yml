@@ -15,21 +15,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Cache Maven artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper
+            ~/.quarkus
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml', '**/.mvn/wrapper/maven-wrapper.properties') }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+
       - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-          cache: maven
 
       - name: Cache Playwright browsers
+        id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-1.49.0
 
-      - name: Install Playwright browser and system dependencies
-        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps chromium"
+      - name: Install Playwright browser
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
+
+      - name: Install Playwright system dependencies
+        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install-deps chromium"
 
       - name: Refresh Instagram fallback via Java test and detect changes
         id: instagram
