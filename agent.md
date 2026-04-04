@@ -1,6 +1,6 @@
 # Agent Guide – TC11 Website
 
-This file contains guidance for AI agents working on the TC11 website project.
+This is the single source of truth for AI agents working on the TC11 project. **Update this file whenever you discover something important that is missing or incorrect.**
 
 ## ⚠️ Important: This is a Static Site Generator
 
@@ -51,34 +51,150 @@ Useful pages to check after common changes:
 4. Use the Playwright MCP `browser_take_screenshot` tool to capture the result.
 5. Inspect the screenshot to confirm the change looks correct before committing.
 
-## 🏗️ Project Layout (quick reference)
+## 📰 Adding a News Article (Post)
+
+Articles live in `content/posts/`. Each post is a **folder** containing an `index.md` file.
+
+### Steps
+
+1. Create the folder: `content/posts/YYYY-MM-DD-article-title/`
+   - Use today's date and a lowercase, hyphenated slug derived from the title.
+2. Create `index.md` inside that folder with this frontmatter:
+
+```markdown
+---
+title: "Article Title"
+category: "Club"
+date: "YYYY-MM-DD"
+layout: layouts/post.html
+labelDetails: "Voir le détail →"
+---
+
+Article content in Markdown...
+```
+
+**Available categories:** `Compétitions`, `Club`, `Jeunes`, `Stages`, `Animations`, `Infos pratiques`
+
+**Available `labelDetails` values:**
+`Voir le détail →`, `En savoir plus →`, `Je m'inscris →`, `Découvrir →`, `Renseignements →`,
+`Voir l'événement →`, `Voir les résultats →`, `Inscrire mon enfant →`, `Je participe →`,
+`Voir le calendrier →`, `Infos et inscription →`, `Voir les photos →`
+
+### Images and attachments
+
+Any image or file placed **in the same folder** as `index.md` is automatically detected by Roq and made available on the article page — no extra configuration needed. Simply copy image files alongside `index.md`.
+
+> ℹ️ `site.slugify-files=false` is set in `application.properties` so accented characters in filenames are preserved as-is.
+
+### Example folder structure
+
+```
+content/posts/2025-06-01-tournoi-ete/
+├── index.md
+├── photo-terrain.jpg
+└── resultats.pdf
+```
+
+## 🏗️ Project Layout
 
 ```
 tc11.fr/
-├── content/               # Pages and articles (Markdown / HTML + frontmatter)
-│   └── posts/             # News articles (YYYY-MM-DD-slug/index.md)
-├── public/                # Static assets copied as-is (images, CSS, JS)
-├── templates/             # Qute HTML templates
-│   ├── layouts/           # Full-page layouts
-│   └── partials/          # Reusable components (header, footer, …)
-├── src/main/java/fr/tc11/ # Java template extensions (data helpers only)
+├── content/               # Site content (Markdown/HTML pages)
+│   ├── index.html         # Homepage
+│   ├── actus.json         # News list data file (auto-generated)
+│   ├── instagram.json     # Instagram posts data file (template-rendered)
+│   ├── installations.json # Tennis court installations data
+│   └── posts/             # Blog articles (YYYY-MM-DD-slug/index.md)
+├── public/                # Static assets (copied as-is)
+│   ├── assets/            # Images
+│   ├── style.css          # Main CSS
+│   └── *.js               # JavaScript files
+├── templates/             # Qute templates
+│   ├── layouts/           # Page layouts (main.html, page.html, post.html)
+│   └── partials/          # Reusable components (head.html, header.html, footer.html)
+├── src/main/java/fr/tc11/ # Java source code
+│   ├── ContactTemplateExtension.java    # {contact:email} template helper
+│   ├── FilesViewHelpers.java            # {files:images(page)} template helper
+│   ├── InstagramPostsFetcher.java       # Instagram feed fetcher
+│   └── InstagramTemplateExtension.java  # {instagram:posts} template helper
 ├── src/main/resources/
-│   └── application.properties  # App configuration
-└── pom.xml
+│   ├── application.properties  # Quarkus/app configuration
+│   └── instagram.json          # Fallback Instagram posts
+├── src/test/java/         # Unit tests (QuarkusTest)
+├── pom.xml                # Maven project config
+└── .github/workflows/     # CI/CD workflows
 ```
 
-## 🧪 Running Tests
+## 🔑 Key Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `pom.xml` | Maven dependencies: Java 21, Quarkus 3.25.2, quarkus-roq 1.8.0, Playwright 1.49.0 |
+| `src/main/resources/application.properties` | Instagram fetcher config, contact email |
+| `.github/workflows/deploy.yml` | Main deploy to GitHub Pages on push to main |
+| `.github/workflows/preview-pr.yml` | PR preview via Surge on `/preview` comment |
+
+## 🔧 Build Commands
+
+### Environment Setup
+
+Always set Java 21 before running commands:
 
 ```bash
 export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
+```
+
+### Compile
+
+```bash
+./mvnw clean compile -DskipTests
+```
+
+### Run Tests (~14 s)
+
+```bash
 ./mvnw test
 ```
 
-Tests use `@QuarkusTest` and run on port **8081**. They validate Java helper logic (e.g. Instagram JSON parsing) — not the rendered HTML pages.
+### Generate Static Site
+
+```bash
+QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B -q package quarkus:run
+```
+
+Output is written to `target/roq/`.
+
+## 🧪 Testing Notes
+
+- Tests use `@QuarkusTest` and run on port **8081** (not 8080).
+- Tests validate Java helper logic (e.g. Instagram JSON parsing) — not the rendered HTML pages.
+
+## ☁️ CI/CD Workflows
+
+1. **deploy.yml** – Deploys to GitHub Pages on push to `main`
+2. **preview-pr.yml** – Comment `/preview` on a PR to deploy a Surge preview
+3. **issue-to-pr.yml** – Auto-creates a PR from issues with the `contenu` label
+4. **playwright-trigger.yml** – Refreshes the Instagram fallback JSON via Playwright
+5. **warm-maven-cache.yml** – Weekly Maven cache warmup
+
+## 📋 Pull Request Requirements
+
+- PR titles **must** follow [Conventional Commits](https://www.conventionalcommits.org/) format **in English**.
+- Examples: `feat: Add new page`, `fix(navigation): Fix mobile menu`, `docs: Update README`
+- Invalid: missing type, uppercase type, non-English description.
+
+## ☕ Java Code Notes
+
+- Template extensions use `@TemplateExtension(namespace = "X")` for `{X:method}` syntax in Qute templates.
+- Instagram posts are fetched at startup with fallback chain: RSS Bridge → Graph API → Playwright → fallback JSON.
+- All Java classes are in package `fr.tc11`.
 
 ## 📝 More Details
 
-- Full development and contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Full contribution guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Project README (French): [`README.md`](README.md)
-- Copilot-specific instructions: [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
+
+---
+
+> **For AI agents:** Always use the documented commands and paths above. Only search the codebase if information here is incomplete or produces errors. If you discover something important that is missing or outdated in this file, update it as part of your work.
