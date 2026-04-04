@@ -70,9 +70,8 @@ public class FilesViewHelpers {
      * Usage in templates: {files:ogImage(page)}
      */
     public static String ogImage(Object page) {
-        String siteUrl = org.eclipse.microprofile.config.ConfigProvider.getConfig()
-                .getOptionalValue("site.url", String.class)
-                .orElse("");
+        String siteUrl = jakarta.enterprise.inject.spi.CDI.current()
+                .select(SiteTemplateExtension.SiteConfig.class).get().getUrl();
 
         String cover = getPageDataString(page, "cover");
         if (cover != null && !cover.isBlank()) {
@@ -89,12 +88,15 @@ public class FilesViewHelpers {
 
     /**
      * Converts an image path to an absolute URL:
-     * - already absolute (starts with "http") → return as-is
+     * - already absolute (starts with "https://" or "http://") → return as-is
      * - root-relative (starts with "/") → prepend siteUrl
      * - relative filename → prepend pageUrlAbsolute (the page URL, which ends with "/")
+     *
+     * Only http and https schemes are accepted for absolute URLs to prevent
+     * unsafe schemes (javascript:, data:, etc.) from appearing in meta tags.
      */
     private static String toAbsolute(String path, String siteUrl, String pageUrlAbsolute) {
-        if (path.startsWith("http")) return path;
+        if (path.startsWith("https://") || path.startsWith("http://")) return path;
         if (path.startsWith("/")) return siteUrl + path;
         return (pageUrlAbsolute != null ? pageUrlAbsolute : siteUrl + "/") + path;
     }
