@@ -22,6 +22,8 @@ public class FilesViewHelpers {
         Pattern.CASE_INSENSITIVE
     );
 
+    private static final String DEFAULT_OG_IMAGE_PATH = "/assets/hero-banner.jpg";
+
     /* ====== API Qute (safe) ====== */
 
     public static List<String> images(Object page) {
@@ -54,6 +56,75 @@ public class FilesViewHelpers {
 
     public static int attachmentsCount(Object page) {
         return attachments(page).size();
+    }
+
+    /**
+     * Returns the absolute URL of the best available image for a page's Open Graph (og:image)
+     * and Twitter Card (twitter:image) meta tags.
+     *
+     * Resolution order:
+     * 1. page.data.cover (frontmatter cover image)
+     * 2. First image attached to the page (files in the same directory)
+     * 3. Default site banner (/assets/hero-banner.jpg)
+     *
+     * Usage in templates: {files:ogImage(page)}
+     */
+    public static String ogImage(Object page) {
+        String siteUrl = org.eclipse.microprofile.config.ConfigProvider.getConfig()
+                .getOptionalValue("site.url", String.class)
+                .orElse("");
+
+        String cover = getPageDataString(page, "cover");
+        if (cover != null && !cover.isBlank()) {
+            return toAbsolute(cover, siteUrl, getPageUrlAbsolute(page));
+        }
+
+        String img = firstImage(page);
+        if (img != null && !img.isBlank()) {
+            return toAbsolute(img, siteUrl, getPageUrlAbsolute(page));
+        }
+
+        return siteUrl + DEFAULT_OG_IMAGE_PATH;
+    }
+
+    /**
+     * Converts an image path to an absolute URL:
+     * - already absolute (starts with "http") → return as-is
+     * - root-relative (starts with "/") → prepend siteUrl
+     * - relative filename → prepend pageUrlAbsolute (the page URL, which ends with "/")
+     */
+    private static String toAbsolute(String path, String siteUrl, String pageUrlAbsolute) {
+        if (path.startsWith("http")) return path;
+        if (path.startsWith("/")) return siteUrl + path;
+        return (pageUrlAbsolute != null ? pageUrlAbsolute : siteUrl + "/") + path;
+    }
+
+    /** Accesses a string value from page.data (frontmatter) via reflection. */
+    private static String getPageDataString(Object page, String key) {
+        try {
+            Method dataMethod = page.getClass().getMethod("data");
+            Object data = dataMethod.invoke(page);
+            if (data == null) return null;
+            Method getMethod = data.getClass().getMethod("get", Object.class);
+            Object val = getMethod.invoke(data, key);
+            return val instanceof String s ? s : null;
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    /** Returns the absolute URL of the page (e.g. "https://tc11.fr/posts/my-post/") via reflection. */
+    private static String getPageUrlAbsolute(Object page) {
+        try {
+            Method urlMethod = page.getClass().getMethod("url");
+            Object url = urlMethod.invoke(page);
+            if (url == null) return null;
+            Method absoluteMethod = url.getClass().getMethod("absolute");
+            Object abs = absoluteMethod.invoke(url);
+            return abs instanceof String s ? s : null;
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     /** Afficher un nom "propre" (pour alt/titre) */

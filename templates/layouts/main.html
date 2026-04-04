@@ -3,8 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title ?: 'TC11 – Tennis Club'}</title>
-  <meta name="description" content="{description ?: 'TC11 — Tennis pour tous et toutes, du loisir à la compétition, pour enfants et adultes.'}" />
+  <title>{page.title ?: 'TC11 – Tennis Club'}</title>
+  <meta name="description" content="{page.data.description ?: 'TC11 — Tennis pour tous et toutes, du loisir à la compétition, pour enfants et adultes.'}" />
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="TC11 – Tennis Club" />
+  <meta property="og:title" content="{page.title ?: 'TC11 – Tennis Club'}" />
+  <meta property="og:description" content="{page.data.description ?: 'TC11 — Tennis pour tous et toutes, du loisir à la compétition, pour enfants et adultes.'}" />
+  <meta property="og:url" content="{page.url.absolute}" />
+  <meta property="og:image" content="{files:ogImage(page)}" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{page.title ?: 'TC11 – Tennis Club'}" />
+  <meta name="twitter:description" content="{page.data.description ?: 'TC11 — Tennis pour tous et toutes, du loisir à la compétition, pour enfants et adultes.'}" />
+  <meta name="twitter:image" content="{files:ogImage(page)}" />
   {#include partials/head.html /}
 </head>
 <body class="bg-white text-tc-ink">
