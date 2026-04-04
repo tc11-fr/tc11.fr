@@ -4,6 +4,8 @@ package fr.tc11; // adapte le package
 import io.quarkus.qute.TemplateExtension;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -59,6 +61,7 @@ public class FilesViewHelpers {
     public static String displayName(String path) {
         if (path == null || path.isBlank()) return "";
         String name = basename(path);
+        name = URLDecoder.decode(name, StandardCharsets.UTF_8);
         int dot = name.lastIndexOf('.');
         if (dot > 0) name = name.substring(0, dot);
         return name.replace('-', ' ').replace('_', ' ');
