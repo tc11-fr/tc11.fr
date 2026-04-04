@@ -16,15 +16,6 @@ Nos membres ont brillé lors des dernières compétitions et nous sommes fiers d
 
 Encore bravo à toutes et à tous pour votre engagement et vos résultats ! 🤝
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
-  <figure>
-    <img src="performances-tc11-1.jpg" alt="Équipe de raquette FFT - victoire 4/0" class="rounded-lg w-full object-cover" />
-  </figure>
-  <figure>
-    <img src="performances-tc11-2.jpg" alt="Équipe homme Chapignac - finale de la coupe" class="rounded-lg w-full object-cover" />
-  </figure>
-</div>
-
 Retrouvez la publication originale sur Instagram : [voir le post @tc11assb](https://www.instagram.com/p/DWW2XAdDIF_/)
 
 ## Bravo à tous ! 🏆
