@@ -39,9 +39,9 @@ Useful pages to check after common changes:
 | Change | URL to screenshot |
 |--------|-------------------|
 | Homepage | `http://localhost:8080/` |
-| News list | `http://localhost:8080/actus/` |
+| News list | `http://localhost:8080/#actus` |
 | A specific article | `http://localhost:8080/posts/<slug>/` |
-| Installations page | `http://localhost:8080/installations/` |
+| Club / installations section | `http://localhost:8080/#club` |
 
 ### Example workflow
 
