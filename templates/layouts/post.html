@@ -21,11 +21,11 @@ labelDetails: Voir le détail →
     <div class="mt-4 flex items-center gap-3 flex-wrap">
       <a href="/{backlink ?: '#actus'}" class="btn bg-white text-tc-ink">← Retour aux actus</a>
       <a class="icon-btn" aria-label="Partager sur Facebook"
-         href="https://www.facebook.com/sharer/sharer.php?u={share_url ?: ''}" target="_blank" rel="noopener">
+         href="https://www.facebook.com/sharer/sharer.php?u={url:encode(page.url.absolute)}" target="_blank" rel="noopener">
         <span class="iconify" data-icon="mdi:facebook"></span>
       </a>
       <a class="icon-btn" aria-label="Partager sur X/Twitter"
-         href="https://twitter.com/intent/tweet?text={page.title}&url={share_url ?: ''}" target="_blank" rel="noopener">
+         href="https://twitter.com/intent/tweet?text={url:encode(page.title)}&url={url:encode(page.url.absolute)}" target="_blank" rel="noopener">
         <span class="iconify" data-icon="mdi:twitter"></span>
       </a>
       <!-- Reactions: likes and views -->
