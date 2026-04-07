@@ -2,7 +2,7 @@
 title: "Week-end du CE à Bois le Roi 🎾🌲"
 description: "Le CE du TC11 a organisé un week-end convivial à Bois le Roi : tennis, détente et bonne humeur au programme !"
 category: "Club"
-date: "2026-04-07"
+date: "2026-04-02"
 layout: layouts/post.html
 labelDetails: "Voir les photos →"
 ---
