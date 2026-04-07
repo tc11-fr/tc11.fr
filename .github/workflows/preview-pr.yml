@@ -103,7 +103,9 @@ jobs:
         env:
           MAVEN_OPTS: -Dmaven.repo.local=$HOME/.m2/repository
           TC11_INSTAGRAM_ENABLED: "false"
-        run: QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B -q package quarkus:run
+        run: |
+          PREVIEW_URL="https://pr-${{ env.PR_NUMBER }}-roq-preview.surge.sh"
+          QUARKUS_ROQ_GENERATOR_BATCH=true ./mvnw -B -q package quarkus:run -Dsite.url="$PREVIEW_URL"
 
       - name: Deploy to Surge
         env:
