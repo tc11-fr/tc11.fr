@@ -1,28 +1,22 @@
 ---
-title: "Week-end du Centre d'entraînement à Bois le Roi 🎾🌲"
-description: "Le Centre d'entraînement du TC11 a organisé un week-end convivial à Bois le Roi : tennis, détente et bonne humeur au programme !"
+title: "Week-end sportif du Centre d'entraînement à l'UCPA de Bois le Roi 🎾🌲"
+description: "Pendant que nos équipes 1 s'imposaient brillamment en championnat de Paris, nos jeunes compétiteurs se préparaient à l'UCPA de Bois le Roi pour leurs championnats par équipes de mai !"
 category: "Club"
 date: "2026-04-02"
 layout: layouts/post.html
 labelDetails: "Voir les photos →"
 ---
 
-## Un week-end de tennis et de convivialité 🌿
+## Un week-end pour être fin prêts ! 🏆
 
-Le Centre d'entraînement (CE) du TC11 a eu la chance de profiter d'un magnifique **week-end à Bois le Roi** ! Au programme : tennis, détente et moments de partage dans un cadre verdoyant.
-
-Ce week-end a été l'occasion de renforcer les liens entre les membres du club, de jouer au tennis dans une ambiance détendue et de profiter de la nature en forêt de Fontainebleau.
+Pendant que nos **équipes 1 dames et messieurs** s'imposaient brillamment **4/1 et 5/0** pour leur entrée dans le championnat de Paris par équipes 1ère division, nos jeunes compétiteurs profitaient d'un **week-end sportif à l'UCPA de Bois le Roi** pour être fins prêts pour leurs championnats par équipes qui débuteront en mai !
 
 ## Au programme 🎾
 
-- 🎾 Sessions de tennis amicales
-- 🌲 Balades en forêt de Fontainebleau
-- 🍽️ Repas conviviaux entre membres
-- 🤝 Moments de partage et de convivialité
-
-## Merci à tous ! 🙏
-
-Un grand merci au **Centre d'entraînement du TC11** pour l'organisation de ce superbe week-end, et à tous les participants pour leur bonne humeur et leur enthousiasme !
+- 🎾 Entraînements intensifs et matchs
+- 🌲 Séjour à l'UCPA de Bois le Roi, en forêt de Fontainebleau
+- 🤝 Cohésion d'équipe et préparation collective
+- 🏅 Objectif : les championnats par équipes de mai !
 
 Retrouvez la publication originale sur Instagram : [voir le post @tc11assb](https://www.instagram.com/p/DWn1JxdjPR5/)
 
