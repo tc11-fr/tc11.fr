@@ -12,9 +12,3 @@ labelDetails: "Voir les résultats →"
 L'**équipe femme 1** du TC11 continue sur sa lancée avec une nouvelle victoire face au **Tennis Amiot** !
 
 Avec ce succès, nos joueuses affichent désormais un bilan parfait : **2 victoires sur 2** cette saison. Bravo à toutes pour cet excellent début de championnat ! 💪
-
-Une photo et un lien Instagram seront ajoutés prochainement.
-
----
-
-Suivez toute l'actualité du club sur notre [compte Instagram @tc11assb](https://www.instagram.com/tc11assb/).
