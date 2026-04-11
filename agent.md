@@ -187,7 +187,7 @@ Output is written to `target/roq/`.
 ## ☕ Java Code Notes
 
 - Template extensions use `@TemplateExtension(namespace = "X")` for `{X:method}` syntax in Qute templates.
-- Instagram posts are fetched at startup with fallback chain: RSS Bridge → Graph API → Playwright → fallback JSON.
+- Instagram posts are fetched at startup with fallback chain: Instagram API (graph.instagram.com, token only) → Playwright headless browser → Graph API (graph.facebook.com, token + account-id) → RSS Bridge → fallback JSON.
 - All Java classes are in package `fr.tc11`.
 
 ## 📝 More Details

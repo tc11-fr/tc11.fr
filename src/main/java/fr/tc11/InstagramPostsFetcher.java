@@ -61,7 +61,10 @@ public class InstagramPostsFetcher {
     // RSS Bridge URL for fetching Instagram posts without authentication
     private static final String RSS_BRIDGE_URL = "https://rss-bridge.org/bridge01/?action=display&context=Username&u=%s&bridge=InstagramBridge&format=Json";
     
-    // Instagram Graph API endpoints
+    // Instagram API endpoint (only requires access token)
+    private static final String INSTAGRAM_API_BASE = "https://graph.instagram.com";
+    
+    // Instagram Graph API endpoints (requires both access token and account ID)
     private static final String GRAPH_API_BASE = "https://graph.facebook.com/v21.0";
     private static final String MEDIA_FIELDS = "id,caption,media_type,media_url,permalink,thumbnail_url,timestamp";
     
@@ -133,7 +136,24 @@ public class InstagramPostsFetcher {
         List<String> fallbackPosts = readFallbackPosts();
         List<String> fetchedUrls = null;
         
-        // Try headless browser scraping first (default strategy)
+        // Try Instagram API first (preferred - only requires access token)
+        if (hasInstagramApiToken()) {
+            LOG.info("Fetching Instagram posts via Instagram API...");
+            try {
+                fetchedUrls = fetchInstagramPostsViaInstagramApi();
+                if (!fetchedUrls.isEmpty()) {
+                    instagramPosts = Collections.unmodifiableList(new ArrayList<>(fetchedUrls));
+                    LOG.infof("Successfully fetched %d Instagram posts via Instagram API", fetchedUrls.size());
+                    return;
+                }
+            } catch (Exception e) {
+                LOG.warnf("Instagram API failed: %s. Trying other methods...", e.getMessage());
+            }
+        } else {
+            LOG.info("Instagram API token not configured. Trying headless browser...");
+        }
+
+        // Try headless browser scraping
         LOG.info("Fetching Instagram posts via headless browser...");
         try {
             fetchedUrls = fetchInstagramPostsViaHeadlessBrowser();
@@ -145,8 +165,8 @@ public class InstagramPostsFetcher {
         } catch (Exception e) {
             LOG.warnf("Headless browser scraping failed: %s. Trying other methods...", e.getMessage());
         }
-        
-        // Try Graph API if credentials are configured
+
+        // Try legacy Graph API if both credentials are configured
         if (hasGraphApiCredentials()) {
             LOG.info("Fetching Instagram posts via Graph API");
             try {
@@ -159,8 +179,6 @@ public class InstagramPostsFetcher {
             } catch (Exception e) {
                 LOG.warnf("Graph API failed: %s. Trying RSS Bridge...", e.getMessage());
             }
-        } else {
-            LOG.info("Graph API credentials not configured. Trying RSS Bridge...");
         }
         
         // Fallback to RSS Bridge
@@ -274,11 +292,53 @@ public class InstagramPostsFetcher {
     }
 
     /**
+     * Checks if an Instagram API token is configured.
+     * The Instagram API (graph.instagram.com) only requires an access token.
+     */
+    private boolean hasInstagramApiToken() {
+        return accessToken.isPresent() && !accessToken.get().isBlank();
+    }
+
+    /**
      * Checks if Graph API credentials are configured.
      */
     private boolean hasGraphApiCredentials() {
         return accessToken.isPresent() && !accessToken.get().isBlank() 
                 && accountId.isPresent() && !accountId.get().isBlank();
+    }
+
+    /**
+     * Fetches Instagram posts using the Instagram API (graph.instagram.com).
+     * Only requires a valid access token — no account ID needed.
+     * This is the preferred method when a token is available.
+     *
+     * @see <a href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/get-started">
+     *      Instagram API with Instagram Login</a>
+     */
+    List<String> fetchInstagramPostsViaInstagramApi() throws IOException, InterruptedException {
+        String token = accessToken.orElseThrow(() -> new IllegalStateException("Access token not configured"));
+
+        String apiUrl = String.format("%s/me/media?fields=%s&limit=%d&access_token=%s",
+                INSTAGRAM_API_BASE,
+                URLEncoder.encode(MEDIA_FIELDS, StandardCharsets.UTF_8),
+                MAX_POSTS,
+                URLEncoder.encode(token, StandardCharsets.UTF_8));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .header("Accept", "application/json")
+                .timeout(Duration.ofSeconds(REQUEST_TIMEOUT_SECONDS))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            String errorMessage = parseGraphApiError(response.body());
+            throw new IOException("Instagram API returned status " + response.statusCode() + ": " + errorMessage);
+        }
+
+        return parseMediaResponse(response.body());
     }
 
     /**
@@ -668,6 +728,13 @@ public class InstagramPostsFetcher {
      */
     List<String> testParseMediaResponse(String jsonResponse) {
         return parseMediaResponse(jsonResponse);
+    }
+    
+    /**
+     * For testing: fetch via Instagram API.
+     */
+    List<String> testFetchInstagramPostsViaInstagramApi() throws IOException, InterruptedException {
+        return fetchInstagramPostsViaInstagramApi();
     }
     
     /**
