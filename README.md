@@ -113,9 +113,7 @@ https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,perm
 3. Nom : `INSTAGRAM_ACCESS_TOKEN`, valeur : le token copié ci-dessus.
 4. Sauvegarder.
 
-Le workflow de déploiement passera automatiquement ce secret en variable d'environnement. Le token n'est **jamais** stocké dans le code source.
-
-> **Note :** En CI (deploy.yml), Instagram est activé avec la chaîne de récupération complète. Le workflow de preview (`preview-pr.yml`) désactive le fetch pour accélérer les builds.
+Le workflow de déploiement utilise le fichier de secours `instagram.json` (`TC11_INSTAGRAM_ENABLED=false`). Le workflow quotidien `instagram-api-refresh.yml` appelle l'Instagram API avec le secret `INSTAGRAM_ACCESS_TOKEN` pour mettre à jour ce fichier de secours, puis déclenche un déploiement si des changements sont détectés. Le token n'est **jamais** stocké dans le code source.
 
 ### Liste noire des posts
 

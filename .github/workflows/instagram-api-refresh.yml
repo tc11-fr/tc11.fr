@@ -1,4 +1,4 @@
-name: Instagram Posts Trigger
+name: Instagram API Refresh
 
 on:
   schedule:
@@ -10,8 +10,10 @@ permissions:
   actions: write
 
 jobs:
-  check-instagram:
+  refresh-instagram:
     runs-on: ubuntu-latest
+    env:
+      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,32 +34,17 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-1.49.0
-
-      - name: Install Playwright browser
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
-
-      - name: Install Playwright system dependencies
-        run: ./mvnw -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install-deps chromium"
-
-      - name: Refresh Instagram fallback via Java test and detect changes
+      - name: Refresh Instagram fallback via API and detect changes
         id: instagram
         run: |
           set -euo pipefail
 
-          ./mvnw -B -Dtest=InstagramFallbackRefreshTest#refreshFallbackFromPlaywrightLive \
-            -Dtc11.test.instagram.refresh=true \
-            -Dtc11.instagram.enabled=true \
+          ./mvnw -B -Dtest=InstagramFallbackRefreshTest#refreshFallbackFromApiLive \
+            -Dtc11.test.instagram.api.refresh=true \
             -Dtc11.instagram.output-file=src/main/resources/instagram.json \
-            test | tee /tmp/instagram-smoke.log
+            test | tee /tmp/instagram-api.log
 
-          PRIMARY_LINE=$(grep -E 'INSTAGRAM_FALLBACK_PRIMARY=' /tmp/instagram-smoke.log | tail -n 1 || true)
+          PRIMARY_LINE=$(grep -E 'INSTAGRAM_FALLBACK_PRIMARY=' /tmp/instagram-api.log | tail -n 1 || true)
           if [ -z "$PRIMARY_LINE" ]; then
             echo "Refresh test output missing INSTAGRAM_FALLBACK_PRIMARY"
             exit 1

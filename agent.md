@@ -175,7 +175,7 @@ Output is written to `target/roq/`.
 1. **deploy.yml** – Deploys to GitHub Pages on push to `main`
 2. **preview-pr.yml** – Comment `/preview` on a PR to deploy a Surge preview
 3. **issue-to-pr.yml** – Auto-creates a PR from issues with the `contenu` label
-4. **playwright-trigger.yml** – Refreshes the Instagram fallback JSON via Playwright
+4. **instagram-api-refresh.yml** – Refreshes the Instagram fallback JSON daily via the Instagram API (requires `INSTAGRAM_ACCESS_TOKEN` secret)
 5. **warm-maven-cache.yml** – Weekly Maven cache warmup
 
 ## 📋 Pull Request Requirements

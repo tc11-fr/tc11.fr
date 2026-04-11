@@ -50,4 +50,24 @@ class InstagramFallbackRefreshTest {
         System.out.println("INSTAGRAM_FALLBACK_COUNT=" + livePosts.size());
         System.out.println("INSTAGRAM_FALLBACK_FILE=" + outputPath);
     }
+
+    @Test
+    @EnabledIfSystemProperty(named = "tc11.test.instagram.api.refresh", matches = "true")
+    void refreshFallbackFromApiLive() throws Exception {
+        Path outputPath = Path.of(System.getProperty("tc11.instagram.output-file", DEFAULT_OUTPUT_FILE));
+        Files.createDirectories(outputPath.getParent());
+
+        List<String> livePosts = fetcher.testFetchInstagramPostsViaInstagramApi();
+
+        if (livePosts == null || livePosts.isEmpty()) {
+            fail("Expected at least one Instagram post from Instagram API fetch");
+        }
+
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(livePosts) + "\n";
+        Files.writeString(outputPath, json);
+
+        System.out.println("INSTAGRAM_FALLBACK_PRIMARY=" + livePosts.getFirst());
+        System.out.println("INSTAGRAM_FALLBACK_COUNT=" + livePosts.size());
+        System.out.println("INSTAGRAM_FALLBACK_FILE=" + outputPath);
+    }
 }

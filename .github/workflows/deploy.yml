@@ -9,8 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TC11_INSTAGRAM_ENABLED: "true"
-      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+      TC11_INSTAGRAM_ENABLED: "false"
     steps:
       - uses: actions/checkout@v4
       
