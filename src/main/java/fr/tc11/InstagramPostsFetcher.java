@@ -320,7 +320,7 @@ public class InstagramPostsFetcher {
 
         String apiUrl = String.format("%s/me/media?fields=%s&limit=%d&access_token=%s",
                 INSTAGRAM_API_BASE,
-                URLEncoder.encode(MEDIA_FIELDS, StandardCharsets.UTF_8),
+                MEDIA_FIELDS,
                 MAX_POSTS,
                 URLEncoder.encode(token, StandardCharsets.UTF_8));
 
@@ -411,7 +411,7 @@ public class InstagramPostsFetcher {
         String apiUrl = String.format("%s/%s/media?fields=%s&limit=%d&access_token=%s",
                 GRAPH_API_BASE,
                 URLEncoder.encode(igAccountId, StandardCharsets.UTF_8),
-                URLEncoder.encode(MEDIA_FIELDS, StandardCharsets.UTF_8),
+                MEDIA_FIELDS,
                 MAX_POSTS,
                 URLEncoder.encode(token, StandardCharsets.UTF_8));
 
