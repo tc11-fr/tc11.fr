@@ -254,9 +254,10 @@ class InstagramPostsFetcherTest {
 
     @Test
     void testExtractPostUrlsFromHtmlMaxLimit() {
-        // HTML with more than MAX_POSTS (6) shortcodes
+        // HTML with more than FETCH_LIMIT (20) shortcodes — only up to FETCH_LIMIT should be returned
         StringBuilder html = new StringBuilder("<html><body>");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 25; i++) {
+            // Shortcodes must be 10-12 chars to pass extractPostUrlsFromHtml length filter
             html.append(String.format("<a href=\"/p/SHORTCODE%02d/\">Post %d</a>", i, i));
         }
         html.append("</body></html>");
@@ -264,8 +265,8 @@ class InstagramPostsFetcherTest {
         List<String> urls = fetcher.testExtractPostUrlsFromHtml(html.toString());
 
         assertNotNull(urls);
-        // Should be limited to MAX_POSTS (6)
-        assertEquals(6, urls.size());
+        // Should be limited to FETCH_LIMIT (20), not MAX_POSTS (6)
+        assertEquals(20, urls.size());
     }
 
     @Test
@@ -294,7 +295,7 @@ class InstagramPostsFetcherTest {
         List<String> urls = fetcher.testExtractPostUrlsFromLinks(hrefs);
 
         assertNotNull(urls);
-        assertEquals(6, urls.size());
+        assertEquals(18, urls.size());
         assertEquals("https://www.instagram.com/p/DV6YmiTDBvC", urls.get(0));
         assertEquals("https://www.instagram.com/p/DMc_B-kNmxf", urls.get(1));
         assertEquals("https://www.instagram.com/p/DK5HR3bgmSY", urls.get(2));
@@ -389,16 +390,16 @@ class InstagramPostsFetcherTest {
 
     @Test
     void testParseRssBridgeResponseMaxLimit() {
-        // Response with more than MAX_POSTS items
+        // Response with more than FETCH_LIMIT (20) items — only up to FETCH_LIMIT should be returned
         StringBuilder json = new StringBuilder("""
             {
                 "version": "https://jsonfeed.org/version/1",
                 "items": [
             """);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 25; i++) {
             if (i > 0) json.append(",");
             json.append(String.format("""
-                {"id": "https://www.instagram.com/p/SHORTCODE%02d/", "url": "https://www.instagram.com/p/SHORTCODE%02d/"}
+                {"id": "https://www.instagram.com/p/SHORTCODE%02d0000/", "url": "https://www.instagram.com/p/SHORTCODE%02d0000/"}
             """, i, i));
         }
         json.append("]}");
@@ -406,8 +407,8 @@ class InstagramPostsFetcherTest {
         List<String> urls = fetcher.testParseRssBridgeResponse(json.toString());
 
         assertNotNull(urls);
-        // Should be limited to MAX_POSTS (6)
-        assertEquals(6, urls.size());
+        // Should be limited to FETCH_LIMIT (20), not MAX_POSTS (6)
+        assertEquals(20, urls.size());
     }
     
     // ========== Blacklist Filtering Tests ==========
@@ -469,5 +470,15 @@ class InstagramPostsFetcherTest {
         // This test ensures the improved matching logic is working
         // A post should only be filtered if the exact shortcode matches with proper delimiters (/p/ or /reel/)
         assertTrue(posts.size() >= 0); // Just verify list is accessible
+    }
+
+    @Test
+    void testGetInstagramPostsLimitsToMaxPostsAfterFiltering() {
+        // Verify that getInstagramPosts() always returns at most MAX_POSTS (6) results,
+        // even when more posts were fetched from the source
+        List<String> posts = fetcher.getInstagramPosts();
+
+        assertNotNull(posts);
+        assertTrue(posts.size() <= 6, "getInstagramPosts() must return at most 6 posts, got: " + posts.size());
     }
 }

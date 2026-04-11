@@ -77,6 +77,8 @@ public class InstagramPostsFetcher {
     private static final Pattern SHORTCODE_JSON_PATTERN = Pattern.compile("\\\"shortcode\\\":\\\"([A-Za-z0-9_-]+)\\\"");
     
     private static final int MAX_POSTS = 6;
+    // How many posts to retrieve from sources before blacklist filtering; must be > MAX_POSTS
+    private static final int FETCH_LIMIT = 20;
     private static final int CONNECT_TIMEOUT_SECONDS = 10;
     private static final int REQUEST_TIMEOUT_SECONDS = 30;
     private static final int BROWSER_TIMEOUT_MS = 30000;
@@ -211,7 +213,11 @@ public class InstagramPostsFetcher {
      * @return unmodifiable list of Instagram post URLs (with blacklisted posts filtered out)
      */
     public List<String> getInstagramPosts() {
-        return filterBlacklistedPosts(instagramPosts);
+        List<String> filtered = filterBlacklistedPosts(instagramPosts);
+        if (filtered.size() <= MAX_POSTS) {
+            return filtered;
+        }
+        return Collections.unmodifiableList(new ArrayList<>(filtered.subList(0, MAX_POSTS)));
     }
 
     /**
@@ -321,7 +327,7 @@ public class InstagramPostsFetcher {
         String apiUrl = String.format("%s/me/media?fields=%s&limit=%d&access_token=%s",
                 INSTAGRAM_API_BASE,
                 MEDIA_FIELDS,
-                MAX_POSTS,
+                FETCH_LIMIT,
                 URLEncoder.encode(token, StandardCharsets.UTF_8));
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -379,7 +385,7 @@ public class InstagramPostsFetcher {
             
             if (items.isArray()) {
                 for (JsonNode item : items) {
-                    if (postUrls.size() >= MAX_POSTS) break;
+                    if (postUrls.size() >= FETCH_LIMIT) break;
                     
                     // Try 'url' field first, then 'id'
                     String url = item.path("url").asText();
@@ -412,7 +418,7 @@ public class InstagramPostsFetcher {
                 GRAPH_API_BASE,
                 URLEncoder.encode(igAccountId, StandardCharsets.UTF_8),
                 MEDIA_FIELDS,
-                MAX_POSTS,
+                FETCH_LIMIT,
                 URLEncoder.encode(token, StandardCharsets.UTF_8));
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -609,7 +615,7 @@ public class InstagramPostsFetcher {
 
         List<String> postUrls = new ArrayList<>();
         for (String shortcode : shortcodes) {
-            if (postUrls.size() >= MAX_POSTS) break;
+            if (postUrls.size() >= FETCH_LIMIT) break;
             postUrls.add("https://www.instagram.com/p/" + shortcode);
         }
 
@@ -654,7 +660,7 @@ public class InstagramPostsFetcher {
         // Convert shortcodes to full URLs using /p/ format (works for embedding both posts and reels)
         List<String> postUrls = new ArrayList<>();
         for (String shortcode : shortcodes) {
-            if (postUrls.size() >= MAX_POSTS) break;
+            if (postUrls.size() >= FETCH_LIMIT) break;
             postUrls.add("https://www.instagram.com/p/" + shortcode);
         }
         
