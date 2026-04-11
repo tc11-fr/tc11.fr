@@ -175,7 +175,7 @@ Output is written to `target/roq/`.
 1. **deploy.yml** – Deploys to GitHub Pages on push to `main`
 2. **preview-pr.yml** – Comment `/preview` on a PR to deploy a Surge preview
 3. **issue-to-pr.yml** – Auto-creates a PR from issues with the `contenu` label
-4. **playwright-trigger.yml** – Refreshes the Instagram fallback JSON via Playwright
+4. **instagram-api-refresh.yml** – Refreshes the Instagram fallback JSON daily via the Instagram API (requires `INSTAGRAM_ACCESS_TOKEN` secret)
 5. **warm-maven-cache.yml** – Weekly Maven cache warmup
 
 ## 📋 Pull Request Requirements
@@ -187,7 +187,7 @@ Output is written to `target/roq/`.
 ## ☕ Java Code Notes
 
 - Template extensions use `@TemplateExtension(namespace = "X")` for `{X:method}` syntax in Qute templates.
-- Instagram posts are fetched at startup with fallback chain: RSS Bridge → Graph API → Playwright → fallback JSON.
+- Instagram posts are fetched at startup with fallback chain: Instagram API (graph.instagram.com, token only) → Playwright headless browser → Graph API (graph.facebook.com, token + account-id) → RSS Bridge → fallback JSON.
 - All Java classes are in package `fr.tc11`.
 
 ## 📝 More Details

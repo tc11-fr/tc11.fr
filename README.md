@@ -72,7 +72,48 @@ tc11.fr/
 
 Le site affiche automatiquement les derniers posts Instagram du compte [@tc11assb](https://www.instagram.com/tc11assb/). La configuration se trouve dans `src/main/resources/application.properties`.
 
-En CI, le workflow `.github/workflows/rss-trigger.yml` met a jour `src/main/resources/instagram.json` via un test Java dedie base sur Playwright puis commit ce fichier de secours. Les workflows de deploiement et de preview utilisent ensuite ce fallback avec `tc11.instagram.enabled=false` afin d'eviter que la generation Roq depende d'un fetch reseau Instagram au moment du build.
+### Chaîne de récupération des posts
+
+Le site utilise la chaîne de récupération suivante :
+
+1. **Instagram API** (`graph.instagram.com`) — si le token `INSTAGRAM_ACCESS_TOKEN` est configuré *(recommandé)*
+2. Scraping via navigateur sans tête (Playwright)
+3. Instagram Graph API (`graph.facebook.com`) — si `INSTAGRAM_ACCESS_TOKEN` et `INSTAGRAM_ACCOUNT_ID` sont tous deux configurés
+4. RSS Bridge (aucune authentification requise)
+5. Fichier de secours `instagram.json` (si tout le reste échoue)
+
+### Obtenir un token Instagram API
+
+1. Aller sur [https://developers.meta.com/](https://developers.meta.com/) et se connecter avec son compte Facebook.
+2. Aller dans **My Apps** → **Create App**.
+3. Choisir un nom (ex. `APP_TC11`), sélectionner **Others** puis **Business**.
+4. Depuis le dashboard, dans **Add products to your app**, cliquer sur **Set up** à côté de **Instagram**.
+5. Dans le menu **App roles → Roles**, cliquer sur **Add people** et s'ajouter en tant que **Instagram Tester** en sélectionnant le compte Instagram cible.
+6. Depuis l'application Instagram, aller dans **Profile → Options (⚙️) → Apps and websites → Tester Invites** et accepter l'invitation.
+7. De retour sur le dashboard Meta, générer un token d'accès pour le compte Instagram.
+
+**Valider le token** dans le navigateur :
+
+```text
+https://graph.instagram.com/me?fields=id,username&access_token=TON_TOKEN
+```
+
+Si `id` et `username` sont retournés, le token est valide.
+
+**Tester la liste des posts :**
+
+```text
+https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,timestamp,thumbnail_url&access_token=TON_TOKEN
+```
+
+### Configurer le token dans GitHub
+
+1. Aller dans **Settings → Secrets and variables → Actions** du dépôt GitHub.
+2. Cliquer sur **New repository secret**.
+3. Nom : `INSTAGRAM_ACCESS_TOKEN`, valeur : le token copié ci-dessus.
+4. Sauvegarder.
+
+Le workflow de déploiement utilise le fichier de secours `instagram.json` (`TC11_INSTAGRAM_ENABLED=false`). Le workflow quotidien `instagram-api-refresh.yml` appelle l'Instagram API avec le secret `INSTAGRAM_ACCESS_TOKEN` pour mettre à jour ce fichier de secours, puis déclenche un déploiement si des changements sont détectés. Le token n'est **jamais** stocké dans le code source.
 
 ### Liste noire des posts
 
