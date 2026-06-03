@@ -15,5 +15,7 @@ Pour renouveler votre inscription, merci de souscrire à l'offre adhésion corre
 
 À l'issue de cette première étape, une proposition de créneaux (sauf groupes compétitions) vous sera envoyée entre le **10 et le 23 juin**. Vous recevrez alors toutes les informations nécessaires pour finaliser définitivement votre inscription pour la saison prochaine.
 
+Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
+
 À très bientôt sur les courts !  
 L'équipe du TC 11
