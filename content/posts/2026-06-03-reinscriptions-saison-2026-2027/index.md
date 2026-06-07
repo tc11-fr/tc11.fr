@@ -19,8 +19,11 @@ Pour renouveler votre inscription, merci de souscrire à l'offre adhésion corre
 
 Les tests de niveau pour les nouveaux adhérents sont prévus :
 
-- 📅 **Lundi 29 juin 2026**
-- 📅 **Mercredi 1er juillet 2026**
+- 📅 **Lundi 29 juin 2026 à partir de 18h** (cours adultes)
+- 📅 **Mercredi 1er juillet 2026 à partir de 17h** (cours enfants)
+
+Les inscriptions auront lieu à Candie (**11 Rue de Candie, 75011 Paris**).  
+[Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
 
 Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
 
