@@ -18,6 +18,7 @@ Une fois cette première étape effectuée, une proposition de créneau vous ser
 Cette proposition de créneau ne concerne pas les groupes compétition, qui font l’objet d’une organisation spécifique.
 
 ## Tests de niveau pour les nouveaux adhérents 🎾
+**Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.**
 
 Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
 
@@ -37,7 +38,7 @@ Le test du mercredi 1er juillet est pour l’instant maintenu à **Candie** :
 
 L’organisation de cette journée pourra toutefois évoluer d’ici là selon l’avancement des travaux.
 
-Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
+
 
 À très bientôt sur les courts !
 L’équipe du TC11
