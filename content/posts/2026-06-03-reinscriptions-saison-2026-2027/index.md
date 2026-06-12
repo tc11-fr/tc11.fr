@@ -26,17 +26,14 @@ Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes
 
 ### Test adultes — lundi 29 juin
 
-Rendez-vous au Tennis Thiéré :
-**9ter-13 passage Thiéré, Paris 11e**
-[Voir l’itinéraire](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+Rendez-vous au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
 
 Ce test était initialement prévu à Candie, mais il est déplacé au Tennis Thiéré à partir de 19h en raison des travaux annoncés à Candie.
 
 ### Test enfants — mercredi 1er juillet
 
-Le test du mercredi 1er juillet est pour l’instant maintenu à Candie :
-**11 rue de Candie, 75011 Paris**
-[Voir l’itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8)
+Le test du mercredi 1er juillet est pour l’instant maintenu à **Candie** :
+[11 rue de Candie, Paris 11e](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8)
 
 L’organisation de cette journée pourra toutefois évoluer d’ici là selon l’avancement des travaux.
 
