@@ -9,28 +9,39 @@ labelDetails: "Infos et réinscription →"
 
 ## Réinscriptions 2026/2027 😄
 
-Les réinscriptions pour la saison 2026/2027 sont désormais ouvertes !
+Les réinscriptions pour la saison 2026/2027 sont ouvertes.
 
-Pour renouveler votre inscription, merci de souscrire à l'offre adhésion correspondante sur votre espace Ten'Up ou celui de votre enfant, dans la rubrique **"Offres de mon club"**, avant le **10 juin**.
+Pour renouveler votre inscription, merci de souscrire à l’offre d’adhésion correspondante depuis votre espace Ten’Up, ou celui de votre enfant, dans la rubrique **« Offres de mon club »**, avant le **10 juin**.
 
-À l'issue de cette première étape, une proposition de créneaux (sauf groupes compétitions) vous sera envoyée entre le **10 et le 23 juin**. Vous recevrez alors toutes les informations nécessaires pour finaliser définitivement votre inscription pour la saison prochaine.
+Une fois cette première étape effectuée, une proposition de créneau vous sera envoyée entre le **10 et le 23 juin**. Vous recevrez alors toutes les informations nécessaires pour finaliser définitivement votre inscription pour la saison prochaine.
 
-## Tests de niveau (nouveaux adhérents) 🎾
+Cette proposition de créneau ne concerne pas les groupes compétition, qui font l’objet d’une organisation spécifique.
 
-Les tests de niveau pour les nouveaux adhérents sont prévus :
+## Tests de niveau pour les nouveaux adhérents 🎾
 
-- 📅 **Lundi 29 juin 2026 à partir de 19h** (cours adultes)
-- 📅 **Mercredi 1er juillet 2026 à partir de 17h** (cours enfants)
+Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
 
-Pour le test du lundi 29 juin, rendez-vous au Tennis Thiéré (**9ter-13 passage Thiéré, Paris 11e**).  
-[Voir l'itinéraire](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7).
+* 📅 **Lundi 29 juin 2026 à partir de 19h au Tennis Thiéré** — cours adultes
+* 📅 **Mercredi 1er juillet 2026 à partir de 17h à Candie** — cours enfants
 
-Pour le test du mercredi 1er juillet, le lieu reste pour l’instant à Candie (**11 Rue de Candie, 75011 Paris**).  
-[Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
+### Test adultes — lundi 29 juin
 
-P.-S. : ce changement de lieu concerne uniquement le 29 juin, suite à l’annonce des travaux à Candie ; l’organisation du 1er juillet peut encore évoluer d’ici là.
+Rendez-vous au Tennis Thiéré :
+**9ter-13 passage Thiéré, Paris 11e**
+[Voir l’itinéraire](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+
+Ce test était initialement prévu à Candie, mais il est déplacé au Tennis Thiéré à partir de 19h en raison des travaux annoncés à Candie.
+
+### Test enfants — mercredi 1er juillet
+
+Le test du mercredi 1er juillet est pour l’instant maintenu à Candie :
+**11 rue de Candie, 75011 Paris**
+[Voir l’itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8)
+
+L’organisation de cette journée pourra toutefois évoluer d’ici là selon l’avancement des travaux.
 
 Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
 
-À très bientôt sur les courts !  
-L'équipe du TC 11
+À très bientôt sur les courts !
+L’équipe du TC11
+
