@@ -19,11 +19,13 @@ Pour renouveler votre inscription, merci de souscrire à l'offre adhésion corre
 
 Les tests de niveau pour les nouveaux adhérents sont prévus :
 
-- 📅 **Lundi 29 juin 2026 à partir de 18h** (cours adultes)
+- 📅 **Lundi 29 juin 2026 à partir de 19h** (cours adultes)
 - 📅 **Mercredi 1er juillet 2026 à partir de 17h** (cours enfants)
 
-Les inscriptions auront lieu à Candie (**11 Rue de Candie, 75011 Paris**).  
-[Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
+Pour le test du lundi 29 juin, rendez-vous au Tennis Thiéré (**9ter-13 passage Thiéré, Paris 11e**).  
+[Voir l'itinéraire](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7).
+
+P.-S. : ce changement fait suite à l’annonce des travaux à Candie et peut encore évoluer d’ici là.
 
 Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
 
