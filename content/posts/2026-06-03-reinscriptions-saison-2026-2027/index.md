@@ -25,7 +25,10 @@ Les tests de niveau pour les nouveaux adhérents sont prévus :
 Pour le test du lundi 29 juin, rendez-vous au Tennis Thiéré (**9ter-13 passage Thiéré, Paris 11e**).  
 [Voir l'itinéraire](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7).
 
-P.-S. : ce changement fait suite à l’annonce des travaux à Candie et peut encore évoluer d’ici là.
+Pour le test du mercredi 1er juillet, le lieu reste pour l’instant à Candie (**11 Rue de Candie, 75011 Paris**).  
+[Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
+
+P.-S. : ce changement de lieu concerne uniquement le 29 juin, suite à l’annonce des travaux à Candie ; l’organisation du 1er juillet peut encore évoluer d’ici là.
 
 Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
 
