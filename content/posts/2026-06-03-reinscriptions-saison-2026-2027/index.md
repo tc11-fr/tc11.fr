@@ -23,7 +23,7 @@ Cette proposition de créneau ne concerne pas les groupes compétition, qui font
 Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
 
 * 📅 **Lundi 29 juin 2026 à partir de 19h au Tennis Thiéré** — cours adultes
-* 📅 **Mercredi 1er juillet 2026 à partir de 17h à Candie** — cours enfants
+* 📅 **Mercredi 1er juillet 2026 à partir de 17h — lieu à définir** — cours enfants
 
 ### Test adultes — lundi 29 juin
 
@@ -33,13 +33,9 @@ Ce test était initialement prévu à Candie, mais il est déplacé au Tennis Th
 
 ### Test enfants — mercredi 1er juillet
 
-Le test du mercredi 1er juillet est pour l’instant maintenu à **Candie** :
-[11 rue de Candie, Paris 11e](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8)
-
-L’organisation de cette journée pourra toutefois évoluer d’ici là selon l’avancement des travaux.
+Le lieu du test du mercredi 1er juillet reste à définir, **Candie étant fermé pour travaux**.
 
 
 
 À très bientôt sur les courts !
 L’équipe du TC11
-
