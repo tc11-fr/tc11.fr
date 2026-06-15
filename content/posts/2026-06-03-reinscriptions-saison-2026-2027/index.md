@@ -25,7 +25,7 @@ Les tests de niveau pour les nouveaux adhérents sont prévus :
 Les inscriptions auront lieu à Candie (**11 Rue de Candie, 75011 Paris**).  
 [Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
 
-Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.
+Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.  Les **places restantes pour les nouvelles inscriptions** seront affichées sur le site à partir du **26 juin**.
 
 À très bientôt sur les courts !  
 L'équipe du TC 11
