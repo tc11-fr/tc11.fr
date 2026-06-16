@@ -9,24 +9,37 @@ labelDetails: "Infos et réinscription →"
 
 ## Réinscriptions 2026/2027 😄
 
-Les réinscriptions pour la saison 2026/2027 sont désormais ouvertes !
+Les réinscriptions pour la saison 2026/2027 sont ouvertes.
 
-Pour renouveler votre inscription, merci de souscrire à l'offre adhésion correspondante sur votre espace Ten'Up ou celui de votre enfant, dans la rubrique **"Offres de mon club"**, avant le **10 juin**.
+Pour renouveler votre inscription, merci de souscrire à l’offre d’adhésion correspondante depuis votre espace Ten’Up, ou celui de votre enfant, dans la rubrique **« Offres de mon club »**, avant le **10 juin**.
 
-À l'issue de cette première étape, une proposition de créneaux (sauf groupes compétitions) vous sera envoyée entre le **10 et le 23 juin**. Vous recevrez alors toutes les informations nécessaires pour finaliser définitivement votre inscription pour la saison prochaine.
+Une fois cette première étape effectuée, une proposition de créneau vous sera envoyée entre le **10 et le 23 juin**. Vous recevrez alors toutes les informations nécessaires pour finaliser définitivement votre inscription pour la saison prochaine.
 
-## Tests de niveau (nouveaux adhérents) 🎾
+Cette proposition de créneau ne concerne pas les groupes compétition, qui font l’objet d’une organisation spécifique.
 
-Les tests de niveau pour les nouveaux adhérents sont prévus :
+## Nouvelles inscriptions et tests de niveau 🎾
+**Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.**
 
-- 📅 **Lundi 29 juin 2026 à partir de 18h** (cours adultes)
-- 📅 **Mercredi 1er juillet 2026 à partir de 17h** (cours enfants)
+Important : suite aux travaux à Candie, les nouvelles inscriptions et tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
 
-Les inscriptions auront lieu à Candie (**11 Rue de Candie, 75011 Paris**).  
-[Voir l'itinéraire](https://maps.app.goo.gl/gUdR2jT8G42pJ6sB8).
+* 📅 **Lundi 29 juin 2026 à partir de 17h30 au Tennis Thiéré** — inscriptions et tests jeunes
+* 📅 **Mercredi 1er juillet 2026 à partir de 19h au Tennis Thiéré** — inscriptions et tests adultes
 
-Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.   
 Les **places restantes pour les nouvelles inscriptions** seront affichées sur le site à partir du **26 juin**.
 
-À très bientôt sur les courts !  
-L'équipe du TC 11
+### Inscriptions et tests jeunes — lundi 29 juin
+
+Rendez-vous à partir de **17h30** au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+
+Ce rendez-vous concerne les inscriptions et tests jeunes.
+
+### Inscriptions et tests adultes — mercredi 1er juillet
+
+Rendez-vous à partir de **19h** au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+
+Ce rendez-vous concerne les inscriptions et tests adultes.
+
+
+
+À très bientôt sur les courts !
+L’équipe du TC11
