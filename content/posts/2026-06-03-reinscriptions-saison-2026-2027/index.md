@@ -25,6 +25,8 @@ Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes
 * 📅 **Lundi 29 juin 2026 à partir de 19h au Tennis Thiéré** — cours adultes
 * 📅 **Mercredi 1er juillet 2026 à partir de 17h — lieu à définir** — cours enfants
 
+Les **places restantes pour les nouvelles inscriptions** seront affichées sur le site à partir du **26 juin**.
+
 ### Test adultes — lundi 29 juin
 
 Rendez-vous au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
