@@ -17,25 +17,27 @@ Une fois cette première étape effectuée, une proposition de créneau vous ser
 
 Cette proposition de créneau ne concerne pas les groupes compétition, qui font l’objet d’une organisation spécifique.
 
-## Tests de niveau pour les nouveaux adhérents 🎾
+## Nouvelles inscriptions et tests de niveau 🎾
 **Aucune nouvelle inscription ne sera prise avant la fin des réinscriptions.**
 
-Les tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
+Important : suite aux travaux à Candie, les nouvelles inscriptions et tests de niveau pour les nouveaux adhérents auront lieu aux dates suivantes :
 
-* 📅 **Lundi 29 juin 2026 à partir de 19h au Tennis Thiéré** — cours adultes
-* 📅 **Mercredi 1er juillet 2026 à partir de 17h — lieu à définir** — cours enfants
+* 📅 **Lundi 29 juin 2026 à partir de 17h30 au Tennis Thiéré** — inscriptions et tests jeunes
+* 📅 **Mercredi 1er juillet 2026 à partir de 19h au Tennis Thiéré** — inscriptions et tests adultes
 
 Les **places restantes pour les nouvelles inscriptions** seront affichées sur le site à partir du **26 juin**.
 
-### Test adultes — lundi 29 juin
+### Inscriptions et tests jeunes — lundi 29 juin
 
-Rendez-vous au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+Rendez-vous à partir de **17h30** au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
 
-Ce test était initialement prévu à Candie, mais il est déplacé au Tennis Thiéré à partir de 19h en raison des travaux annoncés à Candie.
+Ce rendez-vous concerne les inscriptions et tests jeunes.
 
-### Test enfants — mercredi 1er juillet
+### Inscriptions et tests adultes — mercredi 1er juillet
 
-Le lieu du test du mercredi 1er juillet reste à définir, **Candie étant fermé pour travaux**.
+Rendez-vous à partir de **19h** au **Tennis Thiéré** : [9ter-13 passage Thiéré, Paris 11e](https://maps.app.goo.gl/ngWuMTLxJsW14ToN7)
+
+Ce rendez-vous concerne les inscriptions et tests adultes.
 
 
 
