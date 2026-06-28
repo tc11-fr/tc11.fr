@@ -22,7 +22,6 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 ### 🔴 7/8 ans rouge
 
 - **2 places** — Lundi 17h (Passage Thiéré)
-- **4 places** — Mardi 17h (Philippe Auguste)
 - **2 places** — Mardi 17h (Candie)
 - **7 places** — Mercredi 13h (Philippe Auguste)
 
@@ -56,7 +55,7 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 
 Merci de vous présenter ce **lundi à Passage Thiéré** pour les tests de niveau.
 
-Un QR code sur place vous permettra de vous **pré-inscrire après le test de niveau**.
+Un QR code sur place vous permettra de vous **pré-inscrire pour le test de niveau**.
 
 ## 🎾 Places adultes
 
