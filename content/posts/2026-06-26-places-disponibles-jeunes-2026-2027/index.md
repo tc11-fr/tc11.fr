@@ -59,7 +59,7 @@ Un QR code sur place vous permettra de vous **pré-inscrire pour le test de nive
 
 ## 🎾 Places adultes
 
-Les places **adultes** seront mises en ligne **mardi 30 juin**, pour un test de niveau **mercredi 1er juillet**, également à Passage Thiéré.
+Les places **adultes** seront mises en ligne **mardi 30 juin**, pour un test de niveau **mercredi 1er juillet à partir de 19h**, également à Passage Thiéré.
 
 ## 📩 Groupes compétition
 
