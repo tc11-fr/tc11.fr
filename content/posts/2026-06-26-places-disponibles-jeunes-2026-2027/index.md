@@ -53,7 +53,7 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 
 ## 📍 Tests de niveau — Lundi à Passage Thiéré
 
-Merci de vous présenter ce **lundi à Passage Thiéré** pour les tests de niveau.
+Merci de vous présenter ce **lundi à Passage Thiéré à partir de 17h30** pour les tests de niveau.
 
 Un QR code sur place vous permettra de vous **pré-inscrire pour le test de niveau**.
 
