@@ -41,14 +41,6 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 - **2 places** — Mardi 18h (Philippe Auguste)
 - **3 places** — Mercredi 15h (Philippe Auguste)
 
-### 🟢 13/14 ans vert
-
-- **1 place** — Vendredi 18h (Philippe Auguste)
-
-### 🟣 15/16 ans
-
-- **2 places** — Vendredi 18h (Candie)
-
 ⚠️ Tous les autres groupes sont complets, sauf pour les jeunes classés / niveau compétition.
 
 ## 📍 Tests de niveau — Lundi à Passage Thiéré
