@@ -13,11 +13,11 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 
 ### 👶 Mini-tennis (4/5 ans)
 
-- **7 places** — Mardi 16h (Candie)
+- **6 places** — Mardi 16h (Candie)
 
 ### 🟢 6/7 ans non débutant
 
-- **4 places** — Samedi 11h (Gymnase Candie)
+- **1 places** — Samedi 11h (Gymnase Candie)
 
 ### 🔴 7/8 ans rouge
 
@@ -43,7 +43,7 @@ Il reste encore quelques places dans nos groupes jeunes pour la saison prochaine
 
 ### 🟢 13/14 ans vert
 
-- **1 place** — Vendredi 18h (Candie)
+- **1 place** — Vendredi 18h (Philippe Auguste)
 
 ### 🟣 15/16 ans
 
