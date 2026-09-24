@@ -1,13 +1,13 @@
 ---
-title: "Programme fête du club dimanche 27 septembre !!"
-description: "Mini-tennis, fresque écologique, One Point Challenge, pique-nique, jeux et pickleball : découvrez le programme complet de la fête du club."
+title: "🎉 Fête du club dimanche 27 septembre !!"
+description: "Après le report du mois de juin, la Fête du Club est enfin là ! 😄 Rendez-vous ce dimanche 27 septembre, de 10h à 17h à La Faluère, pour une journée conviviale autour du tennis, ouverte à tous les adhérents, jeunes et adultes."
 category: "Animations"
 date: "2026-09-24"
 layout: layouts/post.html
 labelDetails: "Voir l'événement →"
 ---
 
-# FÊTE DU CLUB TC 11 – DIMANCHE 27 SEPTEMBRE
+# 🎉 FÊTE DU CLUB TC 11 – DIMANCHE 27 SEPTEMBRE
 
 Après le report du mois de juin, la Fête du Club est enfin là ! 😄
 
