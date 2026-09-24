@@ -4,7 +4,7 @@ description: "Après le report du mois de juin, la Fête du Club est enfin là !
 category: "Animations"
 date: "2026-09-24"
 layout: layouts/post.html
-labelDetails: "Voir l'événement →"
+labelDetails: "Voir le programme"
 ---
 
 # 🎉 FÊTE DU CLUB TC 11 – DIMANCHE 27 SEPTEMBRE
