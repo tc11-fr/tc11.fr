@@ -59,6 +59,13 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Explain expired token
+        if: failure()
+        run: |
+          if grep -qE 'OAuthException|code: 190' /tmp/instagram-api.log 2>/dev/null; then
+            echo "::error::Le token INSTAGRAM_ACCESS_TOKEN est expiré ou invalide (erreur 190). Il faut le régénérer à la main : README, section « Mettre à jour le token manuellement »."
+          fi
+
       - name: Commit and push if changed
         if: steps.instagram.outputs.changed == 'true'
         run: |
