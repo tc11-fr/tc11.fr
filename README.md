@@ -82,15 +82,25 @@ Le site utilise la chaîne de récupération suivante :
 4. RSS Bridge (aucune authentification requise)
 5. Fichier de secours `instagram.json` (si tout le reste échoue)
 
-### Obtenir un token Instagram API
+### Obtenir un token Instagram API (créer l'app Meta)
 
-1. Aller sur [https://developers.meta.com/](https://developers.meta.com/) et se connecter avec son compte Facebook.
-2. Aller dans **My Apps** → **Create App**.
-3. Choisir un nom (ex. `APP_TC11`), sélectionner **Others** puis **Business**.
-4. Depuis le dashboard, dans **Add products to your app**, cliquer sur **Set up** à côté de **Instagram**.
-5. Dans le menu **App roles → Roles**, cliquer sur **Add people** et s'ajouter en tant que **Instagram Tester** en sélectionnant le compte Instagram cible.
-6. Depuis l'application Instagram, aller dans **Profile → Options (⚙️) → Apps and websites → Tester Invites** et accepter l'invitation.
-7. De retour sur le dashboard Meta, générer un token d'accès pour le compte Instagram.
+Cette procédure crée l'app Meta et génère un premier token. Elle n'est à suivre qu'**une seule fois**, ou pour **repartir de zéro** si l'app existante n'est plus accessible (voir [Où se trouve l'app Meta ?](#où-se-trouve-lapp-meta-)). Pour un simple token expiré, voir [Mettre à jour le token manuellement](#mettre-à-jour-le-token-manuellement).
+
+Prérequis :
+- un **compte Facebook** (personnel ou dédié au club) : la console développeur Meta ne s'ouvre pas avec un compte Instagram ;
+- l'accès au **compte Instagram du club** `tc11assb`, qui doit être un compte **professionnel** (Business ou Créateur).
+
+1. Aller sur [developers.facebook.com/apps](https://developers.facebook.com/apps) et se connecter avec le compte Facebook (la première fois, accepter de s'enregistrer comme développeur Meta).
+2. Cliquer sur **Create App**.
+3. Choisir un nom (ex. `APP_TC11_<pseudo>`), sélectionner **Other** puis le type **Business** (selon l'interface, choisir le cas d'usage **Instagram / Manage messaging & content on Instagram**).
+4. Depuis le dashboard, dans **Add products to your app**, cliquer sur **Set up** à côté de **Instagram**, puis choisir **API setup with Instagram login**.
+5. Dans **App roles → Roles**, cliquer sur **Add people**, choisir **Instagram Tester** et saisir `tc11assb`.
+6. Depuis l'application Instagram connectée à `tc11assb`, aller dans **Profil → ☰ → Paramètres → Apps and websites → Tester Invites** et accepter l'invitation.
+7. De retour dans la console, section **Generate access tokens** : cliquer sur **Add account**, se connecter avec le **compte Instagram du club**, accepter les autorisations, puis cliquer sur **Generate token** à côté de `tc11assb`.
+8. Copier le token (il commence généralement par `IGAA…`), le vérifier (ci-dessous) et l'enregistrer dans le secret GitHub `INSTAGRAM_ACCESS_TOKEN` (voir [Configurer le token dans GitHub](#configurer-le-token-dans-github)).
+9. Mettre à jour la section [Où se trouve l'app Meta ?](#où-se-trouve-lapp-meta-) avec le nom de la nouvelle app et le compte Facebook propriétaire, pour que la personne suivante s'y retrouve.
+
+Le token généré est un token « long » valable **60 jours**, prolongé ensuite automatiquement (voir [Renouvellement automatique du token](#renouvellement-automatique-du-token)).
 
 **Valider le token** dans le navigateur :
 
@@ -109,11 +119,87 @@ https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,perm
 ### Configurer le token dans GitHub
 
 1. Aller dans **Settings → Secrets and variables → Actions** du dépôt GitHub.
-2. Cliquer sur **New repository secret**.
+2. Cliquer sur **New repository secret** (ou, si le secret existe déjà, sur `INSTAGRAM_ACCESS_TOKEN` → **Update secret**).
 3. Nom : `INSTAGRAM_ACCESS_TOKEN`, valeur : le token copié ci-dessus.
 4. Sauvegarder.
 
 Le workflow de déploiement utilise le fichier de secours `instagram.json` (`TC11_INSTAGRAM_ENABLED=false`). Le workflow quotidien `instagram-api-refresh.yml` appelle l'Instagram API avec le secret `INSTAGRAM_ACCESS_TOKEN` pour mettre à jour ce fichier de secours, puis déclenche un déploiement si des changements sont détectés. Le token n'est **jamais** stocké dans le code source.
+
+### Où se trouve l'app Meta ?
+
+> 🔑 L'app Meta s'appelle **`APP_TC11_sunix`** et appartient au **compte Facebook personnel de @sunix**. Ce n'est **pas** le compte Instagram du club qui donne accès à la console développeur.
+>
+> - Console : [developers.facebook.com/apps](https://developers.facebook.com/apps) → se connecter avec le **Facebook de @sunix** → **APP_TC11_sunix**.
+> - Côté Instagram, l'app apparaît sous le nom `APP_TC11_sunix-IG` (Instagram `tc11assb` → **Paramètres → Apps and websites**).
+> - Le compte Instagram `tc11assb` est déclaré **Instagram Tester** de l'app ; c'est avec ce compte qu'on se connecte lors du **Generate token**.
+>
+> **Si @sunix n'est plus disponible** (départ du club, compte Facebook perdu…), pas besoin de récupérer cette app : le token n'y est pas lié de façon définitive. N'importe qui peut **recréer une app avec son propre compte Facebook** en suivant [Obtenir un token Instagram API (créer l'app Meta)](#obtenir-un-token-instagram-api-créer-lapp-meta), puis mettre à jour le secret `INSTAGRAM_ACCESS_TOKEN`. Penser ensuite à :
+> - mettre à jour ce paragraphe (nom de la nouvelle app, compte Facebook propriétaire) ;
+> - recréer le secret `GH_SECRETS_PAT` depuis son propre compte GitHub (le PAT actuel appartient lui aussi à @sunix, voir [Secret `GH_SECRETS_PAT`](#secret-gh_secrets_pat-nécessaire-au-renouvellement)) ;
+> - optionnellement, retirer l'ancienne app côté Instagram (`tc11assb` → **Paramètres → Apps and websites** → `APP_TC11_sunix-IG` → **Remove**).
+
+Un token Instagram « long » est valable **60 jours**. Il est prolongé automatiquement chaque semaine (voir [Renouvellement automatique du token](#renouvellement-automatique-du-token)). Le renouvellement manuel n'est nécessaire que si le token a expiré (ou a été révoqué).
+
+### Mettre à jour le token manuellement
+
+**Quand ?** Quand le workflow **Instagram API Refresh** (ou **Instagram Token Renew**) échoue avec une erreur de ce type :
+
+```text
+Instagram API returned status 400: Error validating access token: Session has expired on ... (type: OAuthException, code: 190)
+```
+
+Le code **190** signifie que le token est expiré ou invalide. Un token expiré ne peut plus être renouvelé automatiquement : il faut en générer un nouveau.
+
+1. Aller sur [developers.facebook.com/apps](https://developers.facebook.com/apps) et se connecter avec le **compte Facebook personnel de @sunix**.
+2. Ouvrir **APP_TC11_sunix** → **Instagram** → **API setup with Instagram login** (ou **Use cases → Instagram → Customize**).
+3. Dans **Generate access tokens**, repérer le compte `tc11assb` :
+   - s'il n'apparaît pas ou affiche une erreur, cliquer sur **Add account** et se connecter avec le **compte Instagram du club** ;
+   - s'il est indiqué que le compte n'est pas testeur : **App roles → Roles → Instagram Testers** → ajouter `tc11assb`, puis accepter l'invitation depuis l'app Instagram (**Paramètres → Apps and websites → Tester Invites**).
+4. Cliquer sur **Generate token** à côté de `tc11assb` et copier le token (il commence généralement par `IGAA…`).
+5. Vérifier le token dans le navigateur (doit renvoyer `"username": "tc11assb"`) :
+   ```text
+   https://graph.instagram.com/me?fields=id,username&access_token=TON_TOKEN
+   ```
+6. Vérifier sa date d'expiration (facultatif) : [Access Token Debugger](https://developers.facebook.com/tools/debug/accesstoken/) → coller le token → **Debug** → ligne **Expires**. La valeur est un timestamp Unix ; pour le convertir : `date -d @1795716406` (Linux) ou `date -r 1795716406` (macOS).
+7. GitHub → **Settings → Secrets and variables → Actions** → `INSTAGRAM_ACCESS_TOKEN` → **Update secret** → coller le token.
+8. **Actions → Instagram API Refresh → Run workflow** pour vérifier que tout repasse au vert.
+
+> ⚠️ Ne jamais coller le token dans une issue, un commit, un chat, etc. Il ne doit exister que dans le secret GitHub.
+
+> ℹ️ Le renouvellement automatique n'accepte qu'un token âgé d'au moins 24 h : ne pas lancer **Instagram Token Renew** à la main juste après avoir généré un nouveau token. Le passage hebdomadaire suffit.
+
+### Renouvellement automatique du token
+
+Le workflow `instagram-token-renew.yml` (**Instagram Token Renew**) tourne **chaque lundi à 6h UTC** (et à la demande via **Run workflow**) :
+
+1. il appelle `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token` avec le token actuel, ce qui renvoie un token valable à nouveau **60 jours** ;
+2. il remplace le secret `INSTAGRAM_ACCESS_TOKEN` par ce nouveau token (via `gh secret set`) ;
+3. il affiche la nouvelle date d'expiration dans le résumé du run ;
+4. en cas d'échec, il ouvre une issue **« Renouvellement du token Instagram en échec »** (ou la commente si elle est déjà ouverte).
+
+Le token n'est jamais affiché dans les logs (masqué avec `::add-mask::`).
+
+Un token n'étant renouvelable que tant qu'il est encore valide, un échec doit être traité dans les semaines qui suivent, sinon il faudra repasser par la [mise à jour manuelle](#mettre-à-jour-le-token-manuellement).
+
+#### Secret `GH_SECRETS_PAT` (nécessaire au renouvellement)
+
+Le `GITHUB_TOKEN` fourni par GitHub Actions ne peut pas modifier les secrets. Le workflow utilise donc un **Personal Access Token fine-grained** stocké dans le secret `GH_SECRETS_PAT`.
+
+Création (depuis le compte GitHub de @sunix) :
+
+1. GitHub → avatar → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+2. **Token name** : `tc11-instagram-token-renew`.
+3. **Resource owner** : `tc11-fr` (un admin de l'organisation devra peut-être approuver le token).
+4. **Expiration** : la plus longue possible (noter la date dans son agenda).
+5. **Repository access** : *Only select repositories* → `tc11-fr/tc11.fr`.
+6. **Permissions → Repository permissions** : **Secrets → Read and write** uniquement (*Metadata: Read-only* est ajouté automatiquement).
+7. **Generate token**, copier la valeur.
+8. Dépôt → **Settings → Secrets and variables → Actions → New repository secret** : nom `GH_SECRETS_PAT`, valeur : le PAT.
+9. **Actions → Instagram Token Renew → Run workflow** pour tester (le token Instagram doit avoir plus de 24 h).
+
+**Sécurité** : la permission *Secrets* ne permet **pas** de lire la valeur des secrets (l'API GitHub ne la renvoie jamais) ; elle permet seulement de lister leurs noms, de les créer/écraser ou de les supprimer. Le PAT est limité à ce seul dépôt et à cette seule permission.
+
+**Quand le PAT expire** : le workflow échoue à l'étape *Update INSTAGRAM_ACCESS_TOKEN secret* (erreur d'authentification `gh`) et ouvre une issue. Il suffit de régénérer un PAT (étapes ci-dessus, ou **Regenerate token** sur le PAT existant) et de mettre à jour le secret `GH_SECRETS_PAT`. Si le token Instagram a expiré entre-temps, faire aussi la [mise à jour manuelle](#mettre-à-jour-le-token-manuellement).
 
 ### Liste noire des posts
 

@@ -1,0 +1,91 @@
+name: Instagram Token Renew
+
+# Renouvelle le token long (60 jours) de l'Instagram API avant son expiration
+# et met à jour le secret INSTAGRAM_ACCESS_TOKEN. Voir README, section
+# « Renouvellement automatique du token ».
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: instagram-token-renew
+  cancel-in-progress: false
+
+jobs:
+  renew-token:
+    runs-on: ubuntu-latest
+    env:
+      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+      GH_SECRETS_PAT: ${{ secrets.GH_SECRETS_PAT }}
+    steps:
+      - name: Check required secrets
+        run: |
+          set -euo pipefail
+          if [ -z "$INSTAGRAM_ACCESS_TOKEN" ]; then
+            echo "::error::Secret INSTAGRAM_ACCESS_TOKEN manquant. Voir README, section « Mettre à jour le token manuellement »."
+            exit 1
+          fi
+          if [ -z "$GH_SECRETS_PAT" ]; then
+            echo "::error::Secret GH_SECRETS_PAT manquant. Voir README, section « Renouvellement automatique du token »."
+            exit 1
+          fi
+
+      - name: Refresh Instagram long-lived token
+        id: refresh
+        run: |
+          set -euo pipefail
+
+          RESPONSE=$(curl -sS -G "https://graph.instagram.com/refresh_access_token" \
+            --data-urlencode "grant_type=ig_refresh_token" \
+            --data-urlencode "access_token=${INSTAGRAM_ACCESS_TOKEN}")
+
+          NEW_TOKEN=$(jq -r '.access_token // empty' <<< "$RESPONSE" 2>/dev/null || true)
+          if [ -z "$NEW_TOKEN" ]; then
+            ERROR=$(jq -r '.error | "\(.message) (type: \(.type), code: \(.code))"' <<< "$RESPONSE" 2>/dev/null || echo "$RESPONSE")
+            echo "::error::Renouvellement du token Instagram impossible : $ERROR"
+            echo "::error::Le token est probablement expiré : il faut le régénérer à la main (README, section « Mettre à jour le token manuellement »)."
+            exit 1
+          fi
+          echo "::add-mask::$NEW_TOKEN"
+
+          EXPIRES_IN=$(jq -r '.expires_in' <<< "$RESPONSE")
+          EXPIRES_AT=$(date -u -d "@$(( $(date +%s) + EXPIRES_IN ))" '+%Y-%m-%d %H:%M UTC')
+          echo "expires_at=$EXPIRES_AT" >> "$GITHUB_OUTPUT"
+
+          # Le nouveau token passe par un fichier temporaire, jamais par les logs.
+          printf '%s' "$NEW_TOKEN" > "$RUNNER_TEMP/instagram-token"
+
+      - name: Update INSTAGRAM_ACCESS_TOKEN secret
+        env:
+          GH_TOKEN: ${{ secrets.GH_SECRETS_PAT }}
+        run: |
+          set -euo pipefail
+          gh secret set INSTAGRAM_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" < "$RUNNER_TEMP/instagram-token"
+          rm -f "$RUNNER_TEMP/instagram-token"
+          echo "Token Instagram renouvelé, nouvelle expiration : ${{ steps.refresh.outputs.expires_at }}" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          TITLE="Renouvellement du token Instagram en échec"
+          EXISTING=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$TITLE\"" --json number --jq '.[0].number // empty')
+          BODY="Le workflow **Instagram Token Renew** a échoué : $RUN_URL
+
+          Tant que ce n'est pas corrigé, le token \`INSTAGRAM_ACCESS_TOKEN\` n'est plus prolongé et le workflow **Instagram API Refresh** finira par échouer (erreur \`code: 190\`).
+
+          Marche à suivre : README, sections « Mettre à jour le token manuellement » et « Renouvellement automatique du token »."
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body "Nouvel échec : $RUN_URL"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
+          fi
