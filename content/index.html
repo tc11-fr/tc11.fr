@@ -5,7 +5,7 @@ layout: layouts/page.html
 ---
 
   {#for post in site.collections.posts}
-    {#if post.data.homepageHighlight}
+    {#if post.data.getBoolean('homepageHighlight')}
       <section class="max-w-6xl mx-auto px-4 pt-8">
         <div class="rounded-3xl bg-tc-orange text-white p-6 md:p-8 shadow-soft">
           <div class="md:flex md:items-center md:justify-between gap-6">
