@@ -32,7 +32,7 @@ layout: layouts/page.html
             <article class="p-5 border rounded-xl hover:shadow-soft transition">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-tc-orange" x-text="actu.categorie"></span>
-                <span class="text-xs text-slate-400" x-text="new Date(actu.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })"></span>
+                <span class="text-xs text-slate-400" x-text="formatActuDate(actu.date)"></span>
               </div>
               <h4 class="font-bold mb-2" x-text="actu.titre"></h4>
               <p class="text-slate-600 mb-3" x-text="actu.resume"></p>
@@ -289,6 +289,14 @@ function actusData() {
     totalActusCount: 0,
     visible: 3,
     increment: 3,
+    formatActuDate(date) {
+      const [year, month, day] = date.split('-').map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    },
     async fetchActus() {
       try {
         const res = await fetch('/actus.json');
