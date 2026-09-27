@@ -290,13 +290,22 @@ function actusData() {
     visible: 3,
     increment: 3,
     async fetchActus() {
-      const res = await fetch('/actus.json');
-      if (res.ok) {
+      try {
+        const res = await fetch('/actus.json');
+        if (!res.ok) {
+          throw new Error('Impossible de charger les actualités (' + res.status + ')');
+        }
         const actus = await res.json();
         this.highlightedActu = actus.find((actu) => actu.highlight) || null;
         this.actus = actus.filter((actu) => !actu.highlight);
         this.totalActusCount = this.actus.length;
         this.visible = Math.min(3, this.totalActusCount);
+      } catch (error) {
+        console.error(error);
+        this.highlightedActu = null;
+        this.actus = [];
+        this.totalActusCount = 0;
+        this.visible = 0;
       }
     }
   }
