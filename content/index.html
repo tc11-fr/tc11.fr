@@ -28,7 +28,7 @@ layout: layouts/page.html
       </div>
       <div class="">
         <div class="grid md:grid-cols-3 gap-6">
-          <template x-for="actu in actus.slice(0, visible)" :key="actu.id">
+          <template x-for="actu in actus.slice(0, visible)">
             <article class="p-5 border rounded-xl hover:shadow-soft transition">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-xs font-bold text-tc-orange" x-text="actu.categorie"></span>

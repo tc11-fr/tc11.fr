@@ -1,7 +1,6 @@
 [
   {#for post in site.collections.posts}
     {
-      "id": "{post.date.format('yyyy-MM-dd')}-{post.title}-{post.url.absolute}",
       "categorie": "{post.data.category}",
       "titre": "{post.title}",
       "lien": "{post.url.absolute}",
