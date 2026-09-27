@@ -4,49 +4,50 @@ description: TC11 — Tennis pour tous et toutes, du loisir à la compétition, 
 layout: layouts/page.html
 ---
 
-  <section class="max-w-6xl mx-auto px-4 pt-8">
-    <div class="rounded-3xl bg-tc-orange text-white p-6 md:p-8 shadow-soft">
-      <div class="md:flex md:items-center md:justify-between gap-6">
-        <div>
-          <p class="text-sm font-bold uppercase tracking-wide text-white/80">Dimanche 27 septembre · 10h–17h · La Faluère</p>
-          <h3 class="mt-2 text-2xl md:text-3xl font-extrabold">🎉 Fête du club dimanche 27 septembre&nbsp;!!</h3>
-          <p class="mt-3 max-w-3xl text-white/90">
-            Après le report du mois de juin, la Fête du Club est enfin là ! 😄
-            Rendez-vous ce dimanche 27 septembre, de 10h à 17h à La Faluère, pour une journée conviviale autour du tennis, ouverte à tous les adhérents, jeunes et adultes.
-          </p>
-        </div>
-        <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
-          <a href="/posts/f-te-du-club-dimanche-27-septembre/" class="btn bg-white text-tc-orange hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Voir le programme</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  {site:requireSingleHomepageHighlight(site.collections.posts)}
 
-  <!-- Rubrique Actus -->
-  <section id="actus" class="max-w-6xl mx-auto px-4 py-12">
-    <div class="flex items-baseline justify-between mb-6">
-      <h3 class="text-2xl font-extrabold">Actualités</h3>
-      <span class="text-sm text-slate-500">MàJ <span id="maj-date"></span></span>
-    </div>
-    <div x-data="actusData()" x-init="fetchActus()" class="">
-      <div class="grid md:grid-cols-3 gap-6">
-        <template x-for="(actu, idx) in actus.slice(0, visible)" :key="idx">
-          <article class="p-5 border rounded-xl hover:shadow-soft transition">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-tc-orange" x-text="actu.categorie"></span>
-              <span class="text-xs text-slate-400" x-text="new Date(actu.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })"></span>
-            </div>
-            <h4 class="font-bold mb-2" x-text="actu.titre"></h4>
-            <p class="text-slate-600 mb-3" x-text="actu.resume"></p>
-            <a :href="actu.lien" class="text-tc-orange hover:text-tc-orange-dark text-sm font-semibold" x-text="actu.lienTexte"></a>
-          </article>
-        </template>
+  <div x-data="actusData()" x-init="fetchActus()">
+    <section class="max-w-6xl mx-auto px-4 pt-8" x-show="highlightedActu" x-cloak>
+      <div class="rounded-3xl bg-tc-orange text-white p-6 md:p-8 shadow-soft">
+        <div class="md:flex md:items-center md:justify-between gap-6">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-wide text-white/80" x-text="highlightedActu ? 'À la une · ' + highlightedActu.categorie : ''"></p>
+            <h3 class="mt-2 text-2xl md:text-3xl font-extrabold" x-text="highlightedActu ? highlightedActu.titre : ''"></h3>
+            <p class="mt-3 max-w-3xl text-white/90" x-text="highlightedActu ? highlightedActu.resume : ''"></p>
+          </div>
+          <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+            <a :href="highlightedActu ? highlightedActu.lien : '#actus'" class="btn bg-white text-tc-orange hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" x-text="highlightedActu ? highlightedActu.lienTexte : 'Voir le détail →'"></a>
+          </div>
+        </div>
       </div>
-      <div class="flex justify-center mt-8" x-show="visible < actus.length">
-        <button class="btn btn-primary" @click="visible += increment">Charger plus d’actu</button>
+    </section>
+
+    <!-- Rubrique Actus -->
+    <section id="actus" class="max-w-6xl mx-auto px-4 py-12">
+      <div class="flex items-baseline justify-between mb-6">
+        <h3 class="text-2xl font-extrabold">Actualités</h3>
+        <span class="text-sm text-slate-500">MàJ <span id="maj-date"></span></span>
       </div>
-    </div>
-  </section>
+      <div class="">
+        <div class="grid md:grid-cols-3 gap-6">
+          <template x-for="actu in actus.slice(0, visible)" :key="actu.lien + '-' + actu.date">
+            <article class="p-5 border rounded-xl hover:shadow-soft transition">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-tc-orange" x-text="actu.categorie"></span>
+                <span class="text-xs text-slate-400" x-text="formatActuDate(actu.date)"></span>
+              </div>
+              <h4 class="font-bold mb-2" x-text="actu.titre"></h4>
+              <p class="text-slate-600 mb-3" x-text="actu.resume"></p>
+              <a :href="actu.lien" class="text-tc-orange hover:text-tc-orange-dark text-sm font-semibold" x-text="actu.lienTexte"></a>
+            </article>
+          </template>
+        </div>
+        <div class="flex justify-center mt-8" x-show="visible < totalActusCount">
+          <button class="btn btn-primary" @click="visible += increment">Charger plus d’actu</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <!-- Galerie Instagram -->
   <section id="galerie" class="bg-[color:var(--tc-orange)]/5 py-12">
@@ -286,12 +287,31 @@ layout: layouts/page.html
 function actusData() {
   return {
     actus: [],
+    highlightedActu: null,
+    totalActusCount: 0,
     visible: 3,
     increment: 3,
+    formatActuDate(date) {
+      const [year, month, day] = date.split('-').map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    },
     async fetchActus() {
-      const res = await fetch('/actus.json');
-      if (res.ok) {
-        this.actus = await res.json();
+      try {
+        const res = await fetch('/actus.json');
+        if (!res.ok) {
+          throw new Error('Impossible de charger les actualités (' + res.status + ')');
+        }
+        const actus = await res.json();
+        this.highlightedActu = actus.find((actu) => actu.highlight) || null;
+        this.actus = actus.filter((actu) => !actu.highlight);
+        this.totalActusCount = this.actus.length;
+        this.visible = Math.min(3, this.totalActusCount);
+      } catch (error) {
+        console.error(error);
       }
     }
   }
