@@ -4,6 +4,8 @@ description: TC11 — Tennis pour tous et toutes, du loisir à la compétition, 
 layout: layouts/page.html
 ---
 
+  {site:requireSingleHomepageHighlight(site.collections.posts)}
+
   <div x-data="actusData()" x-init="fetchActus()">
     <section class="max-w-6xl mx-auto px-4 pt-8" x-show="highlightedActu" x-cloak>
       <div class="rounded-3xl bg-tc-orange text-white p-6 md:p-8 shadow-soft">
