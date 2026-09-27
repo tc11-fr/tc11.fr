@@ -82,15 +82,25 @@ Le site utilise la chaîne de récupération suivante :
 4. RSS Bridge (aucune authentification requise)
 5. Fichier de secours `instagram.json` (si tout le reste échoue)
 
-### Obtenir un token Instagram API
+### Obtenir un token Instagram API (créer l'app Meta)
 
-1. Aller sur [https://developers.meta.com/](https://developers.meta.com/) et se connecter avec son compte Facebook.
-2. Aller dans **My Apps** → **Create App**.
-3. Choisir un nom (ex. `APP_TC11`), sélectionner **Others** puis **Business**.
-4. Depuis le dashboard, dans **Add products to your app**, cliquer sur **Set up** à côté de **Instagram**.
-5. Dans le menu **App roles → Roles**, cliquer sur **Add people** et s'ajouter en tant que **Instagram Tester** en sélectionnant le compte Instagram cible.
-6. Depuis l'application Instagram, aller dans **Profile → Options (⚙️) → Apps and websites → Tester Invites** et accepter l'invitation.
-7. De retour sur le dashboard Meta, générer un token d'accès pour le compte Instagram.
+Cette procédure crée l'app Meta et génère un premier token. Elle n'est à suivre qu'**une seule fois**, ou pour **repartir de zéro** si l'app existante n'est plus accessible (voir [Où se trouve l'app Meta ?](#où-se-trouve-lapp-meta-)). Pour un simple token expiré, voir [Mettre à jour le token manuellement](#mettre-à-jour-le-token-manuellement).
+
+Prérequis :
+- un **compte Facebook** (personnel ou dédié au club) : la console développeur Meta ne s'ouvre pas avec un compte Instagram ;
+- l'accès au **compte Instagram du club** `tc11assb`, qui doit être un compte **professionnel** (Business ou Créateur).
+
+1. Aller sur [developers.facebook.com/apps](https://developers.facebook.com/apps) et se connecter avec le compte Facebook (la première fois, accepter de s'enregistrer comme développeur Meta).
+2. Cliquer sur **Create App**.
+3. Choisir un nom (ex. `APP_TC11_<pseudo>`), sélectionner **Other** puis le type **Business** (selon l'interface, choisir le cas d'usage **Instagram / Manage messaging & content on Instagram**).
+4. Depuis le dashboard, dans **Add products to your app**, cliquer sur **Set up** à côté de **Instagram**, puis choisir **API setup with Instagram login**.
+5. Dans **App roles → Roles**, cliquer sur **Add people**, choisir **Instagram Tester** et saisir `tc11assb`.
+6. Depuis l'application Instagram connectée à `tc11assb`, aller dans **Profil → ☰ → Paramètres → Apps and websites → Tester Invites** et accepter l'invitation.
+7. De retour dans la console, section **Generate access tokens** : cliquer sur **Add account**, se connecter avec le **compte Instagram du club**, accepter les autorisations, puis cliquer sur **Generate token** à côté de `tc11assb`.
+8. Copier le token (il commence généralement par `IGAA…`), le vérifier (ci-dessous) et l'enregistrer dans le secret GitHub `INSTAGRAM_ACCESS_TOKEN` (voir [Configurer le token dans GitHub](#configurer-le-token-dans-github)).
+9. Mettre à jour la section [Où se trouve l'app Meta ?](#où-se-trouve-lapp-meta-) avec le nom de la nouvelle app et le compte Facebook propriétaire, pour que la personne suivante s'y retrouve.
+
+Le token généré est un token « long » valable **60 jours**, prolongé ensuite automatiquement (voir [Renouvellement automatique du token](#renouvellement-automatique-du-token)).
 
 **Valider le token** dans le navigateur :
 
@@ -109,7 +119,7 @@ https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,perm
 ### Configurer le token dans GitHub
 
 1. Aller dans **Settings → Secrets and variables → Actions** du dépôt GitHub.
-2. Cliquer sur **New repository secret**.
+2. Cliquer sur **New repository secret** (ou, si le secret existe déjà, sur `INSTAGRAM_ACCESS_TOKEN` → **Update secret**).
 3. Nom : `INSTAGRAM_ACCESS_TOKEN`, valeur : le token copié ci-dessus.
 4. Sauvegarder.
 
@@ -122,6 +132,11 @@ Le workflow de déploiement utilise le fichier de secours `instagram.json` (`TC1
 > - Console : [developers.facebook.com/apps](https://developers.facebook.com/apps) → se connecter avec le **Facebook de @sunix** → **APP_TC11_sunix**.
 > - Côté Instagram, l'app apparaît sous le nom `APP_TC11_sunix-IG` (Instagram `tc11assb` → **Paramètres → Apps and websites**).
 > - Le compte Instagram `tc11assb` est déclaré **Instagram Tester** de l'app ; c'est avec ce compte qu'on se connecte lors du **Generate token**.
+>
+> **Si @sunix n'est plus disponible** (départ du club, compte Facebook perdu…), pas besoin de récupérer cette app : le token n'y est pas lié de façon définitive. N'importe qui peut **recréer une app avec son propre compte Facebook** en suivant [Obtenir un token Instagram API (créer l'app Meta)](#obtenir-un-token-instagram-api-créer-lapp-meta), puis mettre à jour le secret `INSTAGRAM_ACCESS_TOKEN`. Penser ensuite à :
+> - mettre à jour ce paragraphe (nom de la nouvelle app, compte Facebook propriétaire) ;
+> - recréer le secret `GH_SECRETS_PAT` depuis son propre compte GitHub (le PAT actuel appartient lui aussi à @sunix, voir [Secret `GH_SECRETS_PAT`](#secret-gh_secrets_pat-nécessaire-au-renouvellement)) ;
+> - optionnellement, retirer l'ancienne app côté Instagram (`tc11assb` → **Paramètres → Apps and websites** → `APP_TC11_sunix-IG` → **Remove**).
 
 Un token Instagram « long » est valable **60 jours**. Il est prolongé automatiquement chaque semaine (voir [Renouvellement automatique du token](#renouvellement-automatique-du-token)). Le renouvellement manuel n'est nécessaire que si le token a expiré (ou a été révoqué).
 
