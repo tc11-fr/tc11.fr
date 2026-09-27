@@ -84,7 +84,7 @@ Article content in Markdown...
 ### Highlighting one article on the homepage
 
 - Set `homepageHighlight: true` on the article you want to feature in the orange homepage banner.
-- Keep this flag on **one article only** at a time, otherwise multiple highlight banners will be rendered.
+- Keep this flag on **one article only** at a time. If several articles are flagged, the homepage keeps only the first highlighted item returned in `actus.json`.
 
 ### Images and attachments
 
