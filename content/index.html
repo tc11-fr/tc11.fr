@@ -310,10 +310,6 @@ function actusData() {
         this.visible = Math.min(3, this.totalActusCount);
       } catch (error) {
         console.error(error);
-        this.highlightedActu = null;
-        this.actus = [];
-        this.totalActusCount = 0;
-        this.visible = 0;
       }
     }
   }
