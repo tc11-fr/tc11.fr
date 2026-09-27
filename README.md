@@ -170,7 +170,7 @@ Le code **190** signifie que le token est expiré ou invalide. Un token expiré 
 
 ### Renouvellement automatique du token
 
-Le workflow `instagram-token-renew.yml` (**Instagram Token Renew**) tourne **chaque lundi à 6h UTC** (et à la demande via **Run workflow**) :
+Le workflow `instagram-token-renew.yml` (**Instagram Token Renew**) tourne **chaque lundi à 19h UTC** (21h à Paris en été, 20h en hiver, car le cron GitHub est toujours en UTC), ainsi qu'à la demande via **Run workflow** :
 
 1. il appelle `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token` avec le token actuel, ce qui renvoie un token valable à nouveau **60 jours** ;
 2. il remplace le secret `INSTAGRAM_ACCESS_TOKEN` par ce nouveau token (via `gh secret set`) ;
