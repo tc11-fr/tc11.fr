@@ -30,6 +30,15 @@ public class SiteTemplateExtension {
     }
 
     /**
+     * Returns the current year (Europe/Paris) at site generation time.
+     *
+     * Usage in templates: {site:year}
+     */
+    public static int year() {
+        return java.time.Year.now(java.time.ZoneId.of("Europe/Paris")).getValue();
+    }
+
+    /**
      * Fails the build if more than one post is marked with homepageHighlight: true.
      *
      * Usage in templates: {site:requireSingleHomepageHighlight(site.collections.posts)}
