@@ -68,6 +68,7 @@ category: "Club"
 date: "YYYY-MM-DD"
 layout: layouts/post.html
 labelDetails: "Voir le détail →"
+homepageHighlight: false
 ---
 
 Article content in Markdown...
@@ -79,6 +80,11 @@ Article content in Markdown...
 `Voir le détail →`, `En savoir plus →`, `Je m'inscris →`, `Découvrir →`, `Renseignements →`,
 `Voir l'événement →`, `Voir les résultats →`, `Inscrire mon enfant →`, `Je participe →`,
 `Voir le calendrier →`, `Infos et inscription →`, `Voir les photos →`
+
+### Highlighting one article on the homepage
+
+- Set `homepageHighlight: true` on the article you want to feature in the orange homepage banner.
+- Keep this flag on **one article only** at a time, otherwise multiple highlight banners will be rendered.
 
 ### Images and attachments
 
