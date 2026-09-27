@@ -291,8 +291,9 @@ function actusData() {
     async fetchActus() {
       const res = await fetch('/actus.json');
       if (res.ok) {
-        this.actus = await res.json();
-        this.highlightedActu = this.actus.find((actu) => actu.highlight) || null;
+        const actus = await res.json();
+        this.highlightedActu = actus.find((actu) => actu.highlight) || null;
+        this.actus = actus.filter((actu) => !actu.highlight);
       }
     }
   }
