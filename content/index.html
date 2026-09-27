@@ -40,7 +40,7 @@ layout: layouts/page.html
             </article>
           </template>
         </div>
-        <div class="flex justify-center mt-8" x-show="visible < actus.length">
+        <div class="flex justify-center mt-8" x-show="visible < totalActusCount">
           <button class="btn btn-primary" @click="visible += increment">Charger plus d’actu</button>
         </div>
       </div>
@@ -286,6 +286,7 @@ function actusData() {
   return {
     actus: [],
     highlightedActu: null,
+    totalActusCount: 0,
     visible: 3,
     increment: 3,
     async fetchActus() {
@@ -294,6 +295,7 @@ function actusData() {
         const actus = await res.json();
         this.highlightedActu = actus.find((actu) => actu.highlight) || null;
         this.actus = actus.filter((actu) => !actu.highlight);
+        this.totalActusCount = this.actus.length;
       }
     }
   }
