@@ -6,7 +6,8 @@
       "lien": "{post.url.absolute}",
       "resume": "{post.description}",
       "date": "{post.date.format('yyyy-MM-dd')}",
-      "lienTexte": "{post.data.labelDetails ?: 'Voir le détail →'}"
+      "lienTexte": "{post.data.labelDetails ?: 'Voir le détail →'}",
+      "highlight": {post.data.getBoolean('homepageHighlight') ?: false}
     }{#if !post_isLast},{/if}
   {/for}
 ]
